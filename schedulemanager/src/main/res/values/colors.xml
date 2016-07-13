@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="jqyzyh_schedule_color_selected_today">#3a3afd</color>
+    <color name="jqyzyh_schedule_color_selected_day">#000</color>
+
+    <color name="jqyzyh_schedule_fontColor_today">#3a3afd</color>
+    <color name="jqyzyh_schedule_fontColor_day">#000</color>
+    <color name="jqyzyh_schedule_fontColor_selected_day">#fff</color>
+
+    <color name="jqyzyh_schedule_background_schedule">#fff</color>
+
+    <color name="jqyzyh_schedule_line">#cccccc</color>
+</resources>

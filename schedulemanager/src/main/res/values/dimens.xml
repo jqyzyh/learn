@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- 星期字号 -->
+    <dimen name="jqyzyh_schedule_fontSize_week">12sp</dimen>
+    <!-- 日字号 -->
+    <dimen name="jqyzyh_schedule_fontSize_day">16sp</dimen>
+    <!-- 日子文字高度 -->
+    <dimen name="jqyzyh_schedule_height_day_viewpager">40dp</dimen>
+
+    <dimen name="jqyzyh_schedule_width_line">1dp</dimen>
+    <dimen name="jqyzyh_schedule_margin_1">2dp</dimen>
+    <dimen name="jqyzyh_schedule_margin_2">10dp</dimen>
+</resources>

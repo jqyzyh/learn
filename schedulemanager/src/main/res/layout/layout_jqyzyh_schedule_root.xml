@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lilay_jqyzyh_schedule_week_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_jqyzyh_schedule_day"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/jqyzyh_schedule_height_day_viewpager" />
+
+    <TextView
+        android:id="@+id/tv_jqyzyh_schedule_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/jqyzyh_schedule_margin_1"
+        android:gravity="center_horizontal"
+        android:text="星期一 七月 11,2016"
+        android:textColor="@color/jqyzyh_schedule_fontColor_day"
+        android:textSize="@dimen/jqyzyh_schedule_fontSize_day" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/jqyzyh_schedule_width_line"
+        android:layout_marginTop="@dimen/jqyzyh_schedule_margin_2"
+        android:background="@color/jqyzyh_schedule_line" />
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/jqyzyh_schedule_background_schedule" />
+</LinearLayout>

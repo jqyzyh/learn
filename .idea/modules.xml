@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LearnDemo.iml" filepath="$PROJECT_DIR$/LearnDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/learn.iml" filepath="$PROJECT_DIR$/learn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/schedulemanager/schedulemanager.iml" filepath="$PROJECT_DIR$/schedulemanager/schedulemanager.iml" />
     </modules>
   </component>
 </project>

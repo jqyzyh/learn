@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/jqyzyh_schedule_color_selected_day"/>
+    <corners android:radius="50dp"/>
+    <size android:width="@dimen/jqyzyh_schedule_height_day_viewpager" android:height="@dimen/jqyzyh_schedule_height_day_viewpager"/>
+</shape>
