@@ -1,1 +1,1 @@
-include ':app', ':schedulemanager'
+include ':app', ':schedulemanager', ':cusomwidget'

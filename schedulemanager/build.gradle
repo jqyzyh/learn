@@ -1,11 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "24.0.0 rc2"
 
     defaultConfig {
-        applicationId "jqyzyh.iee.schedulemanager"
         minSdkVersion 7
         targetSdkVersion 23
         versionCode 1
