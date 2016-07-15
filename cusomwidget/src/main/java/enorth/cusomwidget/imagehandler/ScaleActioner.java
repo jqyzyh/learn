@@ -8,10 +8,12 @@ import android.os.SystemClock;
 public class ScaleActioner implements Runnable {
     public interface ScaleDelegate{
         void postRunnable(Runnable runnable);
-        void scale(float scale, float px, float py);
+        boolean postScale(float deltaScale, float targetScale, float px, float py);
+        float getScale();
     }
 
-    private int _scaleTime = 500;
+    private float _speed = 0.005f;
+    private int _vector = 1;
 
     private float _startScale;
     private float _targetScale;
@@ -24,7 +26,6 @@ public class ScaleActioner implements Runnable {
 
     private boolean _running;
 
-
     public ScaleActioner(ScaleDelegate delegate){
         _delegate = delegate;
     }
@@ -36,13 +37,24 @@ public class ScaleActioner implements Runnable {
         _py = py;
         _startTime = SystemClock.elapsedRealtime();
         _running = true;
+
+        if(targetScale < startScale){
+            _vector = -1;
+        }else{
+            _vector = 1;
+        }
+
         if(_delegate != null){
             _delegate.postRunnable(this);
         }
     }
 
     public void stop(){
+        _running = false;
+    }
 
+    public boolean isRunning(){
+        return _running;
     }
 
     @Override
@@ -52,16 +64,16 @@ public class ScaleActioner implements Runnable {
         }
 
         long delta = SystemClock.elapsedRealtime() - _startTime;
+        _startTime = SystemClock.elapsedRealtime();
         if(delta < 0){
             delta = 0;
         }
-        float scale;
-        if(delta >= _scaleTime){
-            scale = _targetScale;
+        float scale = delta * _speed * _vector;
+        boolean flag = _delegate.postScale(1 + scale, _targetScale, _px, _py);
+        if(_delegate.getScale() * _vector >= _targetScale * 1 || flag){
+            stop();
         }else{
-            scale = _startScale + (_targetScale - _startScale) * delta / _scaleTime;
             _delegate.postRunnable(this);
         }
-        _delegate.scale(scale, _px, _py);
     }
 }
