@@ -3,7 +3,6 @@ package jqyzyh.iee.schedulemanager;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import java.util.Map;
  * Created by yuhang on 2016/7/15.
  */
 public class WeekDayAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener{
-    static final String LOG_TAG = "WeekDayAdapter";
     public interface WeekDelegate{
         void onSelectedDay(Calendar calendar, boolean isClick);
     }
@@ -89,8 +87,6 @@ public class WeekDayAdapter extends PagerAdapter implements ViewPager.OnPageChan
     }
 
     public int getPosition(Calendar calendar){
-        Log.d(LOG_TAG, "getPosition 1==>" + _today.get(Calendar.WEEK_OF_YEAR));
-        Log.d(LOG_TAG, "getPosition 2==>" + calendar.get(Calendar.WEEK_OF_YEAR));
         return CURRENT_WEEK_POSTION + CalendarUtils.getWeekOffset(_today, calendar);
     }
 

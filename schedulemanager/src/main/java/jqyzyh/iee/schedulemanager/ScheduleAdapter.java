@@ -14,8 +14,6 @@ import java.util.List;
  */
 public class ScheduleAdapter extends PagerAdapter {
 
-    static final String LOG_TAG = "ScheduleAdapter";
-
     /**
      * view数量7（一周天数）+ 2（这周左右个一天）一共9项
      */

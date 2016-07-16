@@ -105,8 +105,7 @@ public class ScheduleView extends LinearLayout implements WeekDayAdapter.WeekDel
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
-        _vpSchedule.setEnabled(ViewPager.SCROLL_STATE_IDLE == state);
+        _vpSchedule.requestDisallowInterceptTouchEvent(ViewPager.SCROLL_STATE_IDLE != state);
 
         if(state == ViewPager.SCROLL_STATE_IDLE){
             /*滚动停止如果position是开头或者结尾跳转上一页或者下一页*/
