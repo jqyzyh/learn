@@ -1,3 +1,19 @@
 <resources>
 
+    <style name="ScheduleTextWeekTitle">
+        <item name="android:layout_width">@dimen/jqyzyh_schedule_height_day_viewpager</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/jqyzyh_schedule_fontSize_week</item>
+        <item name="android:textColor">@color/jqyzyh_schedule_fontColor_day</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ScheduleTextDay">
+        <item name="android:layout_width">@dimen/jqyzyh_schedule_height_day_viewpager</item>
+        <item name="android:layout_height">@dimen/jqyzyh_schedule_height_day_viewpager</item>
+        <item name="android:textSize">@dimen/jqyzyh_schedule_fontSize_day</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/jqyzyh_schedule_selector_day_day</item>
+        <item name="android:textColor">@drawable/jqyzyh_schedule_colors_day</item>
+    </style>
 </resources>
