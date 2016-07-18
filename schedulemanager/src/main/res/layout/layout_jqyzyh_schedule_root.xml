@@ -1,17 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/lilay_jqyzyh_schedule_week_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" />
+        android:paddingLeft="@dimen/jqyzyh_schedule_margin_2"
+        android:paddingRight="@dimen/jqyzyh_schedule_margin_2"
+        android:orientation="horizontal" >
+        <TextView
+            android:text="@string/jqyzyh_schedule_sunday"
+            style="@style/ScheduleTextWeekTitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_monday"
+            style="@style/ScheduleTextWeekTitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_tuesday"
+            style="@style/ScheduleTextWeekTitle"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_wednesday"
+            style="@style/ScheduleTextWeekTitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_thursday"
+            style="@style/ScheduleTextWeekTitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_friday"
+            style="@style/ScheduleTextWeekTitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="1px"/>
+        <TextView
+            android:text="@string/jqyzyh_schedule_saturday"
+            style="@style/ScheduleTextWeekTitle" />
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_jqyzyh_schedule_day"
+        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/jqyzyh_schedule_height_day_viewpager" />
 
@@ -21,7 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/jqyzyh_schedule_margin_1"
         android:gravity="center_horizontal"
-        android:text="星期一 七月 11,2016"
         android:textColor="@color/jqyzyh_schedule_fontColor_day"
         android:textSize="@dimen/jqyzyh_schedule_fontSize_day" />
 
@@ -32,7 +79,8 @@
         android:background="@color/jqyzyh_schedule_line" />
 
     <android.support.v4.view.ViewPager
+        android:id="@+id/vp_jqyzyh_schedule_date"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/jqyzyh_schedule_background_schedule" />
-</LinearLayout>
+</merge>
