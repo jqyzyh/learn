@@ -26,6 +26,25 @@ public class ImageHandler implements View.OnTouchListener,
         ScaleGestureDetector.OnScaleGestureListener,
         GestureDetector.OnDoubleTapListener,
         ScaleActioner.ScaleDelegate {
+
+    static final int CHECK_BORDER_NONE = 0x0;
+    /**
+     * 左边进入屏幕
+     */
+    static final int CHECK_BORDER_MASK_LEFT = 0x1;
+    /**
+     * 右边进入屏幕
+     */
+    static final int CHECK_BORDER_MASK_RIGHT = CHECK_BORDER_MASK_LEFT << 1;
+    /**
+     * 上边边进入屏幕
+     */
+    static final int CHECK_BORDER_MASK_TOP = CHECK_BORDER_MASK_RIGHT << 1;
+    /**
+     * 下边边进入屏幕
+     */
+    static final int CHECK_BORDER_MASK_BOTTOM = CHECK_BORDER_MASK_TOP << 1;
+
     static final String LOG_TAG = "ImageHandler";
     static final float MAX_SCALE = 4;
     private ImageView _imageView;
@@ -61,6 +80,8 @@ public class ImageHandler implements View.OnTouchListener,
     private ScaleGestureDetector _scaleGestureDetector;
 
     private ScaleActioner _scaleActioner;
+
+    private int _drawableHashCode;
 
     public ImageHandler(Context context) {
         _gestureDetector = new GestureDetector(context, this);
@@ -167,7 +188,7 @@ public class ImageHandler implements View.OnTouchListener,
      */
     private int checkBorderAndCenter() {
         if (_imageView == null) {
-            return 0;
+            return CHECK_BORDER_NONE;
         }
         //获得矩阵换算后的图片位置大小
         RectF rect = getMatrixRectF();
@@ -176,30 +197,34 @@ public class ImageHandler implements View.OnTouchListener,
 
         int width = _imageView.getWidth();
         int height = _imageView.getHeight();
-        int ret = 0;
+        int ret = CHECK_BORDER_NONE;
         if (rect.width() >= width) {
             if (rect.left >= 0) {
                 deltaX = -rect.left;
-                ret = 1;
+                ret |= CHECK_BORDER_MASK_LEFT;
             }
             if (rect.right <= width) {
                 deltaX = width - rect.right;
-                ret = 2;
+                ret |= CHECK_BORDER_MASK_RIGHT;
             }
         } else {
             deltaX = 0.5f * width - rect.right + 0.5f * rect.width();
+            ret |= CHECK_BORDER_MASK_LEFT | CHECK_BORDER_MASK_RIGHT;
         }
 
 
         if (rect.height() >= height) {
             if (rect.top > 0) {
                 deltaY = -rect.top;
+                ret |= CHECK_BORDER_MASK_TOP;
             }
             if (rect.bottom < height) {
                 deltaY = height - rect.bottom;
+                ret |= CHECK_BORDER_MASK_BOTTOM;
             }
         } else {
             deltaY = 0.5f * height - rect.bottom + 0.5f * rect.height();
+            ret |= CHECK_BORDER_MASK_TOP | CHECK_BORDER_MASK_BOTTOM;
         }
 
         _matrix.postTranslate(deltaX, deltaY);
@@ -257,7 +282,7 @@ public class ImageHandler implements View.OnTouchListener,
         if (_imageView == null) {
             return false;
         }
-        LogUtils.d(LOG_TAG, "postImageScale==>" + deltaScale + ","+px + "," + py);
+        LogUtils.d(LOG_TAG, "postImageScale==>" + deltaScale + "," + px + "," + py);
         boolean ret = false;
         float scale = getScale();
         //如果缩放比例没有超过边界值
@@ -289,19 +314,19 @@ public class ImageHandler implements View.OnTouchListener,
         if (_imageView == null) {
             return false;
         }
-        LogUtils.d(LOG_TAG, "postImageScale==>" + deltaScale + ","+px + "," + py);
+        LogUtils.d(LOG_TAG, "postImageScale==>" + deltaScale + "," + px + "," + py);
         boolean ret = false;
         float scale = getScale();
         //如果缩放比例没有超过边界值
 
-        if(deltaScale > 1){//放大
+        if (deltaScale > 1) {//放大
             if (deltaScale * scale > border) {
                 deltaScale = border / scale;
                 ret = true;
             }
         }
 
-        if(deltaScale < 1){//缩小
+        if (deltaScale < 1) {//缩小
             //与边界值取齐
             if (deltaScale * scale < border) {
                 deltaScale = border / scale;
@@ -325,14 +350,14 @@ public class ImageHandler implements View.OnTouchListener,
      */
     boolean scrollImage(float distanceX, float distanceY) {
         _matrix.postTranslate(distanceX, distanceY);
-        int local = checkBorderAndCenter();
+        int checkBorder = checkBorderAndCenter();
         boolean ret = true;
         _imageView.setImageMatrix(_matrix);
-        if (distanceX > 0 && local == 1) {//向右移动 并且到边界
+        if (distanceX > 0 && (checkBorder & CHECK_BORDER_MASK_LEFT) == CHECK_BORDER_MASK_LEFT) {//向右移动 并且到边界
             Log.d(LOG_TAG, "右划");
             ret = false;
         }
-        if (distanceX < 0 && local == 2) {//向左移动 并且到边界
+        if (distanceX < 0 && (checkBorder & CHECK_BORDER_MASK_RIGHT) == CHECK_BORDER_MASK_RIGHT) {//向左移动 并且到边界
             Log.d(LOG_TAG, "左划");
             ret = false;
         }
@@ -345,10 +370,19 @@ public class ImageHandler implements View.OnTouchListener,
 
     @Override
     public void onGlobalLayout() {
-        if (_isFirst) {
+        /*获取当前drawable的hashcode*/
+        Drawable drawable = getDrawable();
+        int hashCode;
+        if(drawable == null){
+            hashCode = 0;
+        }else {
+            hashCode = drawable.hashCode();
+        }
+        if (_isFirst || hashCode != _drawableHashCode) {/*如果是第一次加载，或者图片drawable的hashcode变化了（hashcode变化当做图片源变化了）初始化控件*/
             _isFirst = false;
             resetScale();
         }
+        _drawableHashCode = hashCode;
     }
 
     @Override
@@ -365,7 +399,7 @@ public class ImageHandler implements View.OnTouchListener,
     //TODO ========================= OnGestureListener =================================
     @Override
     public boolean onDown(MotionEvent e) {
-        if(!checkEnable()){
+        if (!checkEnable()) {
             return false;
         }
         return true;
@@ -383,7 +417,7 @@ public class ImageHandler implements View.OnTouchListener,
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if(!checkEnable()){
+        if (!checkEnable()) {
             return false;
         }
         boolean flag = scrollImage(-distanceX, -distanceY);
@@ -422,23 +456,31 @@ public class ImageHandler implements View.OnTouchListener,
 
     @Override
     public void onScaleEnd(ScaleGestureDetector detector) {
-        if(!checkEnable()){
+        if (!checkEnable()) {
             return;
         }
         Log.d(LOG_TAG, "onScaleEnd ");
         float scale = getScale();
         Log.d(LOG_TAG, "onScaleEnd==>" + scale);
-        if(scale < _initScale){
+        if (scale < _initScale) {
             _scaleActioner.startScale(scale, _initScale, _imageView.getWidth() / 2, _imageView.getHeight() / 2);
         }
-        if(scale > _maxScale){
+        if (scale > _maxScale) {
             _scaleActioner.startScale(scale, _maxScale, detector.getFocusX(), detector.getFocusY());
         }
     }
 
     //TODO ========================= OnDoubleTapListener =================================
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+        if(_imageView != null){
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+                _imageView.performClick();
+            }else{
+                _imageView.callOnClick();
+            }
+        }
         return true;
     }
 
