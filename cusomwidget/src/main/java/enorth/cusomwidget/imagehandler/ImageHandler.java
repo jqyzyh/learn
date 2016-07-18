@@ -328,11 +328,11 @@ public class ImageHandler implements View.OnTouchListener,
         int local = checkBorderAndCenter();
         boolean ret = true;
         _imageView.setImageMatrix(_matrix);
-        if (distanceX < 0 && local == 1) {//向右移动 并且到边界
+        if (distanceX > 0 && local == 1) {//向右移动 并且到边界
             Log.d(LOG_TAG, "右划");
             ret = false;
         }
-        if (distanceX > 0 && local == 2) {//向左移动 并且到边界
+        if (distanceX < 0 && local == 2) {//向左移动 并且到边界
             Log.d(LOG_TAG, "左划");
             ret = false;
         }
