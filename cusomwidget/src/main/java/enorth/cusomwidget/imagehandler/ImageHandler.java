@@ -48,6 +48,9 @@ public class ImageHandler implements View.OnTouchListener,
     static final String LOG_TAG = "ImageHandler";
     static final float MAX_SCALE = 4;
     private ImageView _imageView;
+
+    private float _maxRote = MAX_SCALE;
+
     /**
      * 是否初始化过
      */
@@ -84,6 +87,11 @@ public class ImageHandler implements View.OnTouchListener,
     private int _drawableHashCode;
 
     public ImageHandler(Context context) {
+        this(context, MAX_SCALE);
+    }
+
+    public ImageHandler(Context context, float maxRote){
+        _maxRote = maxRote;
         _gestureDetector = new GestureDetector(context, this);
         _gestureDetector.setOnDoubleTapListener(this);
         _scaleGestureDetector = new ScaleGestureDetector(context, this);
@@ -110,7 +118,7 @@ public class ImageHandler implements View.OnTouchListener,
         }
     }
 
-    private boolean resetScale() {
+    public boolean resetScale() {
         LogUtils.d(LOG_TAG, "resetScale start");
         if (_imageView == null) {
             return false;
@@ -137,7 +145,7 @@ public class ImageHandler implements View.OnTouchListener,
             scale = Math.min(w * 1.0f / dw, h * 1.0f / dh);
         }
         _initScale = scale;
-        _maxScale = scale * MAX_SCALE;
+        _maxScale = scale * _maxRote;
         _matrix = new Matrix();
         _matrix.setTranslate((w - dw) / 2, (h - dh) / 2);
         _matrix.postScale(scale, scale, w / 2, h / 2);
