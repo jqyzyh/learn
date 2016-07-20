@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import jqyzyh.iee.cusomwidget.imagehandler.ImageHandler;
+
 public class ImageActivity extends Activity {
 
     @Override

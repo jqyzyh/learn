@@ -15,7 +15,7 @@ import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import enorth.cusomwidget.utils.LogUtils;
+import jqyzyh.iee.cusomwidget.utils.LogUtils;
 
 /**
  * Created by jqyzyh on 2016/7/14.

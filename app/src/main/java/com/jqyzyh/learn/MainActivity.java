@@ -76,4 +76,8 @@ public class MainActivity extends AppCompatActivity {
     public void schedule(View v){
         startActivity(new Intent(this, ScheduleActivity.class));
     }
+
+    public void camera(View v){
+        startActivity(new Intent(this, CameraActivity.class));
+    }
 }

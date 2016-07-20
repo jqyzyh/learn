@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23+'
     compile project(':cusomwidget')
     compile project(':schedulemanager')
+    compile project(':camera')
 }
