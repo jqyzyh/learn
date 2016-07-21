@@ -3,8 +3,9 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 23
     buildToolsVersion BUILD_TOOLS_VERSION
+
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 7
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -14,8 +15,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    productFlavors {
     }
 }
 
