@@ -80,4 +80,8 @@ public class MainActivity extends AppCompatActivity {
     public void camera(View v){
         startActivity(new Intent(this, CameraActivity.class));
     }
+
+    public void webview(View v){
+        startActivity(new Intent(this, WebViewActivity.class));
+    }
 }

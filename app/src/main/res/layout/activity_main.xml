@@ -23,4 +23,9 @@
         android:text="camera"
         android:onClick="camera"
         android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="wrap_content"
+        android:text="webview"
+        android:onClick="webview"
+        android:layout_height="wrap_content" />
 </LinearLayout>

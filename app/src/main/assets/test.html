@@ -1,0 +1,45 @@
+
+<html>
+<head>
+<title>confrim 的使用方法</title>
+<script type="text/javascript">
+function clear1()
+{
+ if(confirm("确定要清空数据吗？"))
+ {
+ document.main.text1.value="";
+ }
+}
+</script>
+</head>
+<boty>
+<form name="main">
+<input type="text" name="text1"/>
+<input type="button" name="submit" value="数据清空" onclick="return clear1()"/>
+</form>
+</body>
+</html>
+<html>
+<head>
+<title>js confirm</title>
+<script>
+function begin()
+{
+ var a=confirm("郭杨和小代是好朋友吗？");
+ if(a==true)
+ {
+ /*document.write("恭喜你答对了！");*/
+ alert("恭喜你答对了！");
+ begin();
+ }
+ else
+ {
+ /*document.write("你真是猪，这么简单的问题都答不对！");*/
+ alert("你真是猪，这么简单的问题都答不对！");
+ begin();
+ }
+ }
+</script>
+</head >
+</body>
+</html>
