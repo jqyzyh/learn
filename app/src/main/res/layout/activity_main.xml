@@ -28,4 +28,9 @@
         android:text="webview"
         android:onClick="webview"
         android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="wrap_content"
+        android:text="test"
+        android:onClick="test"
+        android:layout_height="wrap_content" />
 </LinearLayout>

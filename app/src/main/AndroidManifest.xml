@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jqyzyh.learn">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
@@ -24,7 +26,8 @@
             android:name=".ScheduleActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

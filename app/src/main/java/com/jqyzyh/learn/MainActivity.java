@@ -6,8 +6,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 
 import jqyzyh.iee.schedulemanager.CalendarUtils;
 
@@ -67,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d("mylog", "week 44 ===>" +calendar4.get(Calendar.YEAR) + "," + calendar4.get(Calendar.WEEK_OF_YEAR));
 
 
+
+
+
+
     }
 
     public void showimage(View v){
@@ -83,5 +96,53 @@ public class MainActivity extends AppCompatActivity {
 
     public void webview(View v){
         startActivity(new Intent(this, WebViewActivity.class));
+    }
+
+    public void test(View v){
+//        startActivity(new Intent(this, TestActivity.class));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                });
+
+                try {
+                    URL url = new URL("https://apijump.2000cms.cn/api/cms_api_60/Api!liveRooms.do");
+
+                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                    connection.setSSLSocketFactory(MNTSSLSocketFactory.getSSLSocketFactory(MainActivity.this));
+                    connection.setConnectTimeout(30000);
+
+                    connection.connect();
+
+                    int code = connection.getResponseCode();
+
+                    Log.d("mylog", "getResponseCode==>" + code);
+
+                    InputStream is = connection.getInputStream();
+                    byte[] buffer = new byte[4*1024];
+                    int len ;
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    while((len = is.read(buffer)) != -1){
+                        os.write(buffer, 0, len);
+                        os.flush();
+                    }
+
+                    String string = new String(os.toByteArray());
+                    Log.d("mylog", "response ====>" + string);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 }
