@@ -53,7 +53,7 @@ public class PathHandler implements View.OnTouchListener, ViewTreeObserver.OnGlo
         mPath.setFillType(Path.FillType.EVEN_ODD);
     }
 
-    public void attech(View attechView){
+    public void attach(View attechView){
         if(mAttechView != null){
             mAttechView.setOnClickListener(null);
             UIKit.removeOnGlobalLayoutListener(mAttechView, this);
@@ -171,7 +171,6 @@ public class PathHandler implements View.OnTouchListener, ViewTreeObserver.OnGlo
 
         return true;
     }
-
 
     public void drawPath(Canvas canvas) {
         canvas.drawBitmap(mResultBitmap, 0, 0, mPaint);

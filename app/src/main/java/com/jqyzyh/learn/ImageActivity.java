@@ -41,7 +41,7 @@ public class ImageActivity extends Activity {
             final ImageView imageView = new ImageView(ImageActivity.this);
             imageView.setImageResource(resids[position]);
             ImageHandler imageHandler = new ImageHandler(ImageActivity.this);
-            imageHandler.attchImageView(imageView);
+            imageHandler.attachImageView(imageView);
             container.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

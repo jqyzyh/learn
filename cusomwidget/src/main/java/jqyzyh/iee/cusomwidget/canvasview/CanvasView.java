@@ -41,7 +41,7 @@ public class CanvasView extends View{
             return;
         }
         mPathHandler = new PathHandler();
-        mPathHandler.attech (this);
+        mPathHandler.attach(this);
     }
 
     @Override

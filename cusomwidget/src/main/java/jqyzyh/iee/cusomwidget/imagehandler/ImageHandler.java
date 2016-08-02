@@ -99,7 +99,7 @@ public class ImageHandler implements View.OnTouchListener,
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void attchImageView(ImageView imageView) {
+    public void attachImageView(ImageView imageView) {
         _isFirst = true;
         if (_imageView != null) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
