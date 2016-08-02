@@ -99,8 +99,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void test(View v){
-//        startActivity(new Intent(this, TestActivity.class));
-
+        startActivity(new Intent(this, PathPaintActivity.class));
+        if(true){
+            return;
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
