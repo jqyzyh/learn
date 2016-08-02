@@ -403,7 +403,6 @@ public class TextureVideoView extends TextureView implements MediaController.Med
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
-//            mPendingSubtitleTracks.clear();
             mCurrentState = STATE_IDLE;
             if (cleartargetstate) {
                 mTargetState  = STATE_IDLE;
