@@ -1,15 +1,15 @@
 package com.jqyzyh.learn;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,9 +18,14 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
+import jqyzyh.iee.cusomwidget.iospupopmenu.IOSPupopMenu;
 import jqyzyh.iee.schedulemanager.CalendarUtils;
 
 public class MainActivity extends AppCompatActivity {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return super.dispatchKeyEvent(event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Calendar calendar =Calendar.getInstance();
+
 
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         Log.d("mylog", "1===>" +format.format(calendar.getTime()));
@@ -99,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void test(View v){
+
+        if(true){
+            IOSPupopMenu iosPupopMenu = new IOSPupopMenu(this);
+            iosPupopMenu.addMenu("按钮1", Color.BLUE, null);
+            iosPupopMenu.addMenu("按钮2", Color.BLUE, null);
+            iosPupopMenu.addMenu("按钮3", Color.BLUE, null);
+            iosPupopMenu.addMenu("按钮4", Color.BLUE, null);
+            iosPupopMenu.setTitleText("这是一个菜单");
+            iosPupopMenu.show();
+            return;
+        }
+
         startActivity(new Intent(this, PathPaintActivity.class));
         if(true){
             return;

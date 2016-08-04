@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lilay_menu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/lilay_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_ios_popup"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextIOSPopupMenu"
+            android:background="@android:color/transparent"
+            android:text="菜单"
+            android:textColor="#f00" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        style="@style/TextIOSPopupMenu"
+        android:layout_marginTop="15dp"
+        android:text="取消" />
+</LinearLayout>

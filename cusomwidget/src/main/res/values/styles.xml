@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextIOSPopupMenu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#00f</item>
+        <item name="android:background">@drawable/background_ios_popup</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+</resources>
