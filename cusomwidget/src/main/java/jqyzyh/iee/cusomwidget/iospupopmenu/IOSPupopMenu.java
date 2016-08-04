@@ -133,7 +133,7 @@ public class IOSPupopMenu{
         rootView.addView(view, rLp);
 
         TextView tvTitle = (TextView) view.findViewById(R.id.tv_title);
-        if(TextUtils.isEmpty(mTitleText)){
+        if(!TextUtils.isEmpty(mTitleText)){
             tvTitle.setText(mTitleText);
         }
 
