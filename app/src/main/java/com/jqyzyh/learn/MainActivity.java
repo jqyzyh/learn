@@ -106,17 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void test(View v){
 
-        if(true){
-            IOSPupopMenu iosPupopMenu = new IOSPupopMenu(this);
-            iosPupopMenu.addMenu("按钮1", Color.BLUE, null);
-            iosPupopMenu.addMenu("按钮2", Color.BLUE, null);
-            iosPupopMenu.addMenu("按钮3", Color.BLUE, null);
-            iosPupopMenu.addMenu("按钮4", Color.BLUE, null);
-            iosPupopMenu.setTitleText("这是一个菜单");
-            iosPupopMenu.show();
-            return;
-        }
-
         startActivity(new Intent(this, PathPaintActivity.class));
         if(true){
             return;

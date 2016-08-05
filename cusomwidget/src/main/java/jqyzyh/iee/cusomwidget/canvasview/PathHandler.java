@@ -74,17 +74,14 @@ public class PathHandler implements View.OnTouchListener, ViewTreeObserver.OnGlo
     }
 
     private void touchMove(float x, float y){
-        mPath.lineTo(x, y);
-        mAttechView.invalidate();
-//        float dx = Math.abs(x - mLastX);
-//        float dy = Math.abs(y - mLastY);
-//        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE){
-//            LogUtils.d(LOG_TAG, "touchMove==>" + x + "," + y + "," + mLastX + "," + mLastY );
-//            mPath.quadTo(x, y, (mLastX + x) / 2, (mLastY + y) / 2);
-//            mLastX = x;
-//            mLastY = y;
-//            mAttechView.invalidate();
-//        }
+        float dx = Math.abs(x - mLastX);
+        float dy = Math.abs(y - mLastY);
+        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE){
+            mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+            mLastX = x;
+            mLastY = y;
+            mAttechView.invalidate();
+        }
     }
 
     private void touchUp(float x, float y){
