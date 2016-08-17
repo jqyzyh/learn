@@ -17,6 +17,7 @@ public class ImageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+        overridePendingTransition(R.anim.anim_activity_enter, R.anim.anim_activity_exit);
 
         ViewPager vp= (ViewPager) findViewById(R.id.imageView);
         vp.setAdapter(new ImagesAdapter());

@@ -36,20 +36,14 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        SurfaceView sv = (SurfaceView) findViewById(R.id.sf_camera2);
-        surfaceHolder = sv.getHolder();
-        surfaceHolder.addCallback(this);
+        surfaceView = (SurfaceView) findViewById(R.id.sf_camera);
+        cameraHandler = new CameraHandler();
+        holderCallback = new HolderCallback();
+        surfaceView.getHolder().addCallback(holderCallback);
+        cameraHandler.openCamera(this);
+        holderCallback.setCamera(cameraHandler);
 
-//        surfaceView = (SurfaceView) findViewById(R.id.sf_camera);
-//        cameraHandler = new CameraHandler();
-//        holderCallback = new HolderCallback();
-//        surfaceView.getHolder().addCallback(holderCallback);
-//        cameraHandler.openCamera(this);
-//        holderCallback.setCamera(cameraHandler);
-
-    MediaCodec mediaCodec = null;
-    mediaCodec.createInputSurface();
-}
+    }
 
     Paint paint = new Paint();
 

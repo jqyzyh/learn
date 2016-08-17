@@ -4,25 +4,18 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ImageFormat;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
+import android.graphics.Point;
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
 import android.media.MediaCodec;
-import android.media.MediaExtractor;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by jqyzyh on 2016/7/20.
@@ -39,13 +32,7 @@ public class CameraHandler {
 
     private byte[] buffers;
 
-    private Camera.Size mPreviewSize;
-
-    private SurfaceHolder _surface2;
-
-    public void setSurface2(SurfaceHolder surface2) {
-        _surface2 = surface2;
-    }
+    private Point mPreviewSize;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void openCamera(Context contexts) {
@@ -75,16 +62,14 @@ public class CameraHandler {
 
     void initParamenters(Camera camera) {
         Camera.Parameters params = camera.getParameters();
+        camera.setDisplayOrientation(90);
         params.setPreviewSize(params.getSupportedPreviewSizes().get(0).width, params.getSupportedPreviewSizes().get(0).height);
-        params.setRotation(90);
         /*看名字像关闭闪光灯*/
         params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         /*看名字像自动对焦*/
         params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         Log.d("mylog", "format==>" + params.getPreviewFormat());
         camera.setParameters(params);
-        mPreviewSize = params.getPreviewSize();
-        buffers = new byte[params.getPreviewSize().width * params.getPreviewSize().height];
     }
 
     public boolean isReady() {
@@ -99,35 +84,14 @@ public class CameraHandler {
         try {
             _camra.setPreviewDisplay(surface);
             if (surface != null) {
-                surface.setFixedSize(_camra.getParameters().getPreviewSize().width, _camra.getParameters().getPreviewSize().height);
-                buffers = new byte[surface.getSurfaceFrame().width() * surface.getSurfaceFrame().height() * 2];
+                Point size = getBestPreviewSize(_camra.getParameters(), new Point(surface.getSurfaceFrame().width(), surface.getSurfaceFrame().height()));
+                _camra.getParameters().setPreviewSize(size.x, size.y);
+                buffers = new byte[((size.x * size.y) << 3) >> 2];
                 _camra.setPreviewCallbackWithBuffer(new Camera.PreviewCallback() {
                     @TargetApi(Build.VERSION_CODES.FROYO)
                     @Override
                     public void onPreviewFrame(byte[] data, Camera camera) {
                         Log.d(LOG_TAG, "onPreviewFrame");
-                        int w = mPreviewSize.width;
-                        int h = mPreviewSize.height;
-                        YuvImage image = new YuvImage(data, camera.getParameters().getPreviewFormat(), w, h, null);
-                        ByteArrayOutputStream os = new ByteArrayOutputStream(data.length);
-                        if (image.compressToJpeg(new Rect(0, 0, w, h), 100, os)) {
-                            byte[] tmp = os.toByteArray();
-                            Bitmap bmp = BitmapFactory.decodeByteArray(tmp, 0, tmp.length);
-                            if (_surface2 != null) {
-                                Canvas canvas = _surface2.lockCanvas();
-                                Log.d(LOG_TAG, "onPreviewFrame 1");
-                                if (canvas != null) {
-                                    Log.d(LOG_TAG, "onPreviewFrame 2");
-                                    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-                                    paint.setColor(Color.RED);
-                                    canvas.drawRect(0, 0, 100, 100, paint);
-//                                    canvas.drawBitmap(bmp, 0, 0, paint);
-                                    _surface2.unlockCanvasAndPost(canvas);
-                                }
-                            }
-
-                        }
-
                         _camra.addCallbackBuffer(buffers);
                     }
                 });
@@ -154,5 +118,31 @@ public class CameraHandler {
             _camra.setPreviewCallbackWithBuffer(null);
             _camra.release();
         }
+    }
+
+    static Point getBestPreviewSize(Camera.Parameters parameters, Point surfaceSize){
+        List<Size> supportSizes = parameters.getSupportedPreviewSizes();
+
+        if(supportSizes == null || supportSizes.isEmpty()){
+            return surfaceSize;
+        }
+
+        Point ret = new Point();
+
+        float rote = surfaceSize.x * 1.0f / surfaceSize.y;
+
+        for(Size size : supportSizes){
+            if(ret == null){
+                ret.x = size.width;
+                ret.y = size.height;
+            }else{
+                if(Math.abs(rote - size.width * 1.0f / size.height) < Math.abs(rote - ret.x * 1.0f / ret.y)){
+                    ret.x = size.width;
+                    ret.y = size.height;
+                }
+            }
+        }
+
+        return ret;
     }
 }

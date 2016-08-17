@@ -2,14 +2,18 @@ package com.jqyzyh.learn;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -106,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void test(View v){
 
+        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
+
         startActivity(new Intent(this, PathPaintActivity.class));
         if(true){
             return;
@@ -146,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                     String string = new String(os.toByteArray());
                     Log.d("mylog", "response ====>" + string);
 
+
+
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -153,5 +163,47 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
 
+    }
+
+    public void sendBinBin(){
+        StringBuilder xml = new StringBuilder();
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        xml.append("<tad version=\"1.0\">");
+        xml.append("<rq id=\"\" name=\"logon\">");
+        xml.append("<info uid=\"setUid\" vcode=\"setVcode\" vid=\"setVid\" time=\"1470816450270\" rcode=\"\" ver=\"setVer\" ctoken=\"setCtoken+longtim\"/>");
+        xml.append("</rq>");
+        xml.append("</tad>");
+        try {
+            byte[] xmlbyte = xml.toString().getBytes("utf-8");
+            URL url = new URL("http://60.30.156.6:1997/tradefront/trade");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setDoOutput(true);// 允许输出
+            conn.setDoInput(true);
+            conn.setUseCaches(false);// 不使用缓存
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
+            conn.setRequestProperty("Charset", "UTF-8");
+            conn.setRequestProperty("Content-Length",
+                    String.valueOf(xmlbyte.length));
+            conn.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+            conn.getOutputStream().write(xmlbyte);
+            conn.getOutputStream().flush();
+            conn.getOutputStream().close();
+            int code = conn.getResponseCode();
+            Log.d("mylog", "response code ====>" + code);
+            InputStream is = conn.getInputStream();
+            byte[] buffer = new byte[4*1024];
+            int len ;
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            while((len = is.read(buffer)) != -1){
+                os.write(buffer, 0, len);
+                os.flush();
+            }
+            final String string = new String(os.toByteArray());
+            Log.d("mylog", "response ====>" + string);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

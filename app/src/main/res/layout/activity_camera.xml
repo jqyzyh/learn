@@ -9,9 +9,4 @@
         android:id="@+id/sf_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <SurfaceView
-        android:id="@+id/sf_camera2"
-        android:background="#8000ff00"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
 </RelativeLayout>
