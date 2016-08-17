@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="#fff"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.jqyzyh.learn.WheelViewActivity">
+    <jqyzyh.iee.cusomwidget.wheelview.WheelView
+        android:id="@+id/test"
+        android:background="#80ff0000"
+        android:layout_width="match_parent"
+
+        android:layout_height="120dp" >
+    </jqyzyh.iee.cusomwidget.wheelview.WheelView>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@drawable/white_mask_1"
+        android:layout_height="30dp"/>
+    <View
+        android:layout_alignBottom="@id/test"
+        android:layout_width="match_parent"
+        android:background="@drawable/white_mask_2"
+        android:layout_height="30dp"/>
+</RelativeLayout>

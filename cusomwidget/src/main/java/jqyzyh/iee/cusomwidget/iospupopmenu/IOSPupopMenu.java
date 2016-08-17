@@ -115,6 +115,14 @@ public class IOSPupopMenu{
         layoutParams.flags = WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON;
         layoutParams.format = PixelFormat.RGBA_8888;
         activity.getWindowManager().addView(mRootView, layoutParams);
+
+        mRootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         view.post(new Runnable() {
             @Override
             public void run() {

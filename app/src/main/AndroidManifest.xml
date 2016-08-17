@@ -28,7 +28,8 @@
         <activity android:name=".CameraActivity" />
         <activity android:name=".WebViewActivity" />
         <activity android:name=".TestActivity" />
-        <activity android:name=".PathPaintActivity"></activity>
+        <activity android:name=".PathPaintActivity" />
+        <activity android:name=".WheelViewActivity"></activity>
     </application>
 
 </manifest>

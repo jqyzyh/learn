@@ -9,6 +9,7 @@ import android.graphics.YuvImage;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.d("mylog", "window size==>"+getResources().getDisplayMetrics().widthPixels + "," + getResources().getDisplayMetrics().heightPixels);
         try{
 
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bankuai_logo);

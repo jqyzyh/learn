@@ -206,4 +206,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void wheel(View v){
+        startActivity(new Intent(this, WheelViewActivity.class));
+    }
 }
