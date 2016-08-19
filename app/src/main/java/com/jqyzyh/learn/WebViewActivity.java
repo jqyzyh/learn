@@ -1,10 +1,12 @@
 package com.jqyzyh.learn;
 
 import android.annotation.TargetApi;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -12,6 +14,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import jqyzyh.iee.cusomwidget.mediaplayer.TextureVideoView;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -38,6 +42,14 @@ public class WebViewActivity extends AppCompatActivity {
         wv.setWebChromeClient(new MyWebChromeClient());
         wv.setWebViewClient(new MyWebViewClient());
     }
+
+
+    public void bofang(View v){
+        TextureVideoView videoView  = (TextureVideoView) findViewById(R.id.tv);
+        videoView.loadUrl(Uri.parse("http://www.pub.demo2016.2000cms.cn/video/003/000/152/00300015265_c3c28e17.mov"));
+        videoView.start();
+    }
+
 
     class MyWebViewClient extends WebViewClient{
         @Override

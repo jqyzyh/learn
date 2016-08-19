@@ -4,26 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="5dp">
 
     <LinearLayout
         android:id="@+id/lilay_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_ios_popup"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_title"
             style="@style/TextIOSPopupMenu"
-            android:background="@android:color/transparent"
+            android:background="@drawable/background_ios_popup_top"
             android:text="菜单"
-            android:textColor="#f00" />
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_cancel"
         style="@style/TextIOSPopupMenu"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:text="取消" />
 </LinearLayout>

@@ -105,7 +105,7 @@ public class WheelView extends View implements GestureDetector.OnGestureListener
 
         Log.d("mylog", "onDrawItem==>" + index + "," + lastY + "," + center);
 
-        float marginY = lastY;
+//        float marginY = lastY;
 
 
 //        if(index != 0){
@@ -134,7 +134,7 @@ public class WheelView extends View implements GestureDetector.OnGestureListener
 
         float locOffset =  offset * 1.0f / center;
         float scaleX = 1 - Math.abs(locOffset) * 0.02f;
-        float scaleY = 1 - Math.abs(locOffset) * 0.5f;
+        float scaleY = 1 - Math.abs(locOffset) * 0.3f;
         scaleY *= scaleY;
 
         float textHeight = mTextSizeRect.height() * scaleY;
@@ -151,11 +151,11 @@ public class WheelView extends View implements GestureDetector.OnGestureListener
         canvas.restoreToCount(saveCount);
 
 
-//        if(index > 0){
-//            y += margin * scaleY;
-//        }else {
-//            y -= marginY * scaleY;
-//        }
+        if(index > 0){
+            y += margin * scaleY;
+        }else {
+            y -= margin * scaleY;
+        }
 
         return y;
     }

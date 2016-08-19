@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,7 +28,7 @@ import jqyzyh.iee.cusomwidget.R;
  * Created by jqyzyh on 2016/8/4.
  */
 public class IOSPupopMenu{
-    static class MenuItem{
+    public static class MenuItem{
         CharSequence text;
         int color;
         View.OnClickListener onClickListener;
@@ -70,6 +71,10 @@ public class IOSPupopMenu{
 
     public void setTitleText(String titleText){
         mTitleText = titleText;
+    }
+
+    public void addMenu(MenuItem item){
+        mMenuItems.add(item);
     }
 
     public void show(){
@@ -133,7 +138,7 @@ public class IOSPupopMenu{
 
     View createMenuView(LayoutInflater inflater){
         RelativeLayout rootView = new MyRelativeLayout(inflater.getContext());
-        rootView.setBackgroundColor(0x80000000);
+        rootView.setBackgroundColor(0x20000000);
 
         View view = inflater.inflate(R.layout.layout_ios_popup_menu, null);
         RelativeLayout.LayoutParams rLp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -155,15 +160,16 @@ public class IOSPupopMenu{
             }
         });
 
+        TextView textView = null;
         for(final MenuItem item : mMenuItems){
             View line = new View(inflater.getContext());
-            line.setBackgroundColor(Color.GRAY);
+            line.setBackgroundColor(Color.argb(0x80, 0x88, 0x88, 0x88));
             layout.addView(line, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
 
-            TextView textView = new TextView(inflater.getContext());
+            textView = new TextView(inflater.getContext());
             textView.setGravity(Gravity.CENTER);
-            textView.setTextSize(18);
-            textView.setTextColor(item.color);
+            textView.setTextSize(15);
+            textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_color_ios_popup_menu_button));
             textView.setText(item.text);
             textView.setSingleLine();
             textView.setOnClickListener(new View.OnClickListener() {
@@ -175,8 +181,17 @@ public class IOSPupopMenu{
                     }
                 }
             });
-            layout.addView(textView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (45 * inflater.getContext().getResources().getDisplayMetrics().density)));
+            textView.setBackgroundResource(R.drawable.seletor_ios_popup_button);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getActivity().getResources().getDimensionPixelSize(R.dimen.ios_menu_height_button));
+//            lp.topMargin = 1;
+            layout.addView(textView, lp);
         }
+
+        if(textView != null){
+            textView.setBackgroundResource(R.drawable.seletor_ios_popup_bottom);
+        }
+
         return rootView;
     }
 

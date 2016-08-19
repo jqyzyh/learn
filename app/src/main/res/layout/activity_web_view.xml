@@ -11,5 +11,18 @@
     <WebView
         android:id="@+id/wv"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"/>
+
+    <jqyzyh.iee.cusomwidget.mediaplayer.TextureVideoView
+        android:layout_width="200dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/tv"
+        android:layout_height="200dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:text="bofang"
+        android:onClick="bofang"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

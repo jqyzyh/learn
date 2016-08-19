@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ios_menu_height_button">40dp</dimen>
+</resources>

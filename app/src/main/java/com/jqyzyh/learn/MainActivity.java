@@ -110,9 +110,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void test(View v){
 
-        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
-
-        startActivity(new Intent(this, PathPaintActivity.class));
+//        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
+//
+//        startActivity(new Intent(this, PathPaintActivity.class));
+        IOSPupopMenu menu = new IOSPupopMenu(this);
+        menu.addMenu("啊啊啊", Color.BLUE, null);
+        menu.addMenu("啊啊啊", Color.BLUE, null);
+        menu.addMenu("啊啊啊", Color.BLUE, null);
+        menu.show();
         if(true){
             return;
         }
@@ -166,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendBinBin(){
+
+
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xml.append("<tad version=\"1.0\">");

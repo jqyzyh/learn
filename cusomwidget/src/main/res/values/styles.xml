@@ -2,11 +2,11 @@
 <resources>
     <style name="TextIOSPopupMenu">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_height">@dimen/ios_menu_height_button</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#00f</item>
-        <item name="android:background">@drawable/background_ios_popup</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_color_ios_popup_menu_button</item>
+        <item name="android:background">@drawable/seletor_ios_popup</item>
         <item name="android:singleLine">true</item>
     </style>
 
