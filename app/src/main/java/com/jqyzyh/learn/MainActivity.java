@@ -10,6 +10,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jqyzyh.learn.wheel.DateActivity;
+import com.jqyzyh.learn.wheel.WheelDemo;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -215,6 +218,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void wheel(View v){
-        startActivity(new Intent(this, WheelViewActivity.class));
+        startActivity(new Intent(this, DateActivity.class));
     }
 }
