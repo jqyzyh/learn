@@ -3,8 +3,9 @@ package com.jqyzyh.learn;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import jqyzyh.iee.cusomwidget.wheelview.CalanderDataWraper;
-import jqyzyh.iee.cusomwidget.wheelview.WheelView;
+import java.util.ArrayList;
+
+import jqyzyh.iee.cusomwidget.wheelloop.LoopView;
 
 public class WheelViewActivity extends AppCompatActivity {
 
@@ -13,7 +14,14 @@ public class WheelViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wheel_view);
 
-        WheelView wheelView = (WheelView) findViewById(R.id.test);
-        wheelView.setDataWraper(new CalanderDataWraper());
+        LoopView loopView = (LoopView) findViewById(R.id.test);
+
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            list.add("item " + i);
+        }
+        loopView.setItems(list);
+        loopView.setTextSize(30);
+
     }
 }

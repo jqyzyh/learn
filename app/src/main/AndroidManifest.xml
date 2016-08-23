@@ -31,38 +31,6 @@
         <activity android:name=".PathPaintActivity" />
         <activity android:name=".WheelViewActivity"></activity>
 
-        <activity
-            android:name=".wheel.CitiesActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".wheel.DateActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".wheel.HoloWheelActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".wheel.PasswActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".wheel.SlotMachineActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".wheel.SpeedActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".wheel.Time2Activity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".wheel.TimeActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".wheel.WheelDemo"
-            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

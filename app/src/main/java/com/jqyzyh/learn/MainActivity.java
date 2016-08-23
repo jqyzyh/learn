@@ -2,21 +2,15 @@ package com.jqyzyh.learn;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
-
-import com.jqyzyh.learn.wheel.DateActivity;
-import com.jqyzyh.learn.wheel.WheelDemo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -218,6 +212,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void wheel(View v){
-        startActivity(new Intent(this, DateActivity.class));
+        startActivity(new Intent(this, WheelViewActivity.class));
     }
 }

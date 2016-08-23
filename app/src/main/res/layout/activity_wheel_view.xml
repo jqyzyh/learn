@@ -9,13 +9,12 @@
     android:background="#fff"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jqyzyh.learn.WheelViewActivity">
-    <jqyzyh.iee.cusomwidget.wheelview.WheelView
+    <jqyzyh.iee.cusomwidget.wheelloop.LoopView
         android:id="@+id/test"
-        android:background="#80ff0000"
         android:layout_width="match_parent"
 
         android:layout_height="120dp" >
-    </jqyzyh.iee.cusomwidget.wheelview.WheelView>
+    </jqyzyh.iee.cusomwidget.wheelloop.LoopView>
 
     <View
         android:layout_width="match_parent"
