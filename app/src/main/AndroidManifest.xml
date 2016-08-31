@@ -29,8 +29,8 @@
         <activity android:name=".WebViewActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".PathPaintActivity" />
-        <activity android:name=".WheelViewActivity"></activity>
-
+        <activity android:name=".WheelViewActivity" />
+        <activity android:name=".InputFilterActivity"></activity>
     </application>
 
 </manifest>

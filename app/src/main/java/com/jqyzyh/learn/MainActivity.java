@@ -7,20 +7,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebViewClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 import jqyzyh.iee.cusomwidget.iospupopmenu.IOSPupopMenu;
-import jqyzyh.iee.schedulemanager.CalendarUtils;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -33,61 +35,88 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Calendar calendar =Calendar.getInstance();
+        List<Method> methods = getMethods(WebViewClient.class);
+//        for(Method m : methods){
+//            Log.d("mylog", "=========================>" + m.getName());
+//            String params = "";
+//            Class<?>[] clss = m.getParameterTypes();
+//            if(clss == null || clss.length == 0){
+//
+//                Log.d("mylog", "params==>null");
+//            }else{
+//
+//                for(Class cls : clss){
+//                    params += cls.getName() + ",";
+//                }
+//
+//
+//                Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
+//            }
+//        }
 
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        Log.d("mylog", "1===>" +format.format(calendar.getTime()));
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        Log.d("mylog", "2===>" +format.format(calendar.getTime()));
-        Log.d("mylog", "2 week===>" + calendar.get(Calendar.WEEK_OF_YEAR));
-        calendar.add(Calendar.WEEK_OF_YEAR, -1);
-        Log.d("mylog", "8===>" +format.format(calendar.getTime()));
-        calendar.roll(Calendar.DAY_OF_YEAR, -1);
-        Log.d("mylog", "8===>" +format.format(calendar.getTime()));
+        Log.d("mylog", "=========================>WebViewClientClassicExt=========================>");
+        try {
+            Class cls = Class.forName("android.webkit.WebViewClientClassicExt");
+              methods = getMethods(cls);
+            for(Method m : methods){
+                Log.d("mylog", "=========================>" + m.getName());
+                String params = "";
+                Class<?>[] clss = m.getParameterTypes();
+                if(clss == null || clss.length == 0){
+
+                    Log.d("mylog", "params==>null");
+                }else{
+
+                    for(Class c : clss){
+                        params += c.getName() + ",";
+                    }
 
 
-        Calendar calendar1 =Calendar.getInstance();
-        Log.d("mylog", "111===>" +format.format(calendar1.getTime()));
-        Log.d("mylog", "week 1 ===>" +calendar1.get(Calendar.YEAR) + "," +calendar1.get(Calendar.WEEK_OF_YEAR));
+                    Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.d("mylog", "=========================>WebChromeClient=========================>");
 
-        Calendar calendar2 =Calendar.getInstance();
-        calendar2.set(Calendar.WEEK_OF_YEAR, 1);
-        calendar2.add(Calendar.WEEK_OF_YEAR, -1);
-        Log.d("mylog", "222===>" +format.format(calendar2.getTime()));
-        Log.d("mylog", "week 2 ===>" +calendar2.get(Calendar.YEAR) + "," + calendar2.get(Calendar.WEEK_OF_YEAR));
+        methods = getMethods(WebChromeClient.class);
+        for(Method m : methods){
+            Log.d("mylog", "=========================>" + m.getName());
+            String params = "";
+            Class<?>[] clss = m.getParameterTypes();
+            if(clss == null || clss.length == 0){
 
+                Log.d("mylog", "params==>null");
+            }else{
 
-        Calendar calendar3 =Calendar.getInstance();
-        calendar3.add(Calendar.YEAR, 1);
-        calendar3.set(Calendar.WEEK_OF_YEAR, 1);
-        calendar3.add(Calendar.WEEK_OF_YEAR, -1);
-        Log.d("mylog", "333===>" +format.format(calendar3.getTime()));
-        Log.d("mylog", "week 3 ===>" +calendar3.get(Calendar.YEAR) + "," +calendar3.get(Calendar.WEEK_OF_YEAR));
-
-        Calendar calendar4 =Calendar.getInstance();
-        calendar4.set(Calendar.WEEK_OF_YEAR, 22);
-        Log.d("mylog", "444===>" +format.format(calendar4.getTime()));
-        Log.d("mylog", "week 4 ===>"+calendar4.get(Calendar.YEAR) + ","  +calendar4.get(Calendar.WEEK_OF_YEAR));
-
-        Log.d("mylog", "count1==>" + CalendarUtils.getWeekOffset(calendar1, calendar2));
-        Log.d("mylog", "count2==>" + CalendarUtils.getWeekOffset(calendar1, calendar3));
-        Log.d("mylog", "count3==>" + CalendarUtils.getWeekOffset(calendar1, calendar4));
+                for(Class cls : clss){
+                    params += cls.getName() + ",";
+                }
 
 
-        calendar2.add(Calendar.WEEK_OF_YEAR, -CalendarUtils.getWeekOffset(calendar1, calendar2));
-        Log.d("mylog", "week 22 ===>" +calendar2.get(Calendar.YEAR) + "," + calendar2.get(Calendar.WEEK_OF_YEAR));
-        calendar3.add(Calendar.WEEK_OF_YEAR, -CalendarUtils.getWeekOffset(calendar1, calendar3));
-        Log.d("mylog", "week 33 ===>" +calendar3.get(Calendar.YEAR) + "," + calendar3.get(Calendar.WEEK_OF_YEAR));
-        calendar4.add(Calendar.WEEK_OF_YEAR, -CalendarUtils.getWeekOffset(calendar1, calendar4));
-        Log.d("mylog", "week 44 ===>" +calendar4.get(Calendar.YEAR) + "," + calendar4.get(Calendar.WEEK_OF_YEAR));
-
-
-
-
+                Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
+            }
+        }
 
 
     }
+
+
+    public List<Method> getMethods(Class cls){
+        List<Method> ret = new ArrayList<>();
+        Method[] ms = cls.getMethods();
+        for(Method m : ms){
+            ret.add(m);
+        }
+        if(cls.getSuperclass() != null){
+            ret.addAll(getMethods(cls.getSuperclass()));
+        }
+        return ret;
+
+    }
+
 
     public void showimage(View v){
         startActivity(new Intent(this, ImageActivity.class));
@@ -103,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void webview(View v){
         startActivity(new Intent(this, WebViewActivity.class));
+    }
+
+    public void inputFilter(View v){
+        startActivity(new Intent(this, InputFilterActivity.class));
     }
 
     public void test(View v){
