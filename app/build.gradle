@@ -26,5 +26,5 @@ dependencies {
     compile project(':cusomwidget')
     compile project(':schedulemanager')
     compile project(':camera')
-`    compile project(':commen')
+    compile project(':commen')
 }
