@@ -25,4 +25,17 @@
         android:layout_width="match_parent"
         android:background="@drawable/white_mask_2"
         android:layout_height="30dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="#fff"
+        android:layout_height="match_parent">
+
+        <DatePicker
+            android:layout_width="wrap_content"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:spinnersShown="true"
+            android:layout_height="wrap_content"></DatePicker>
+    </RelativeLayout>
 </RelativeLayout>

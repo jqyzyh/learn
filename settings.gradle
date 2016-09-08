@@ -1,1 +1,1 @@
-include ':app', ':schedulemanager', ':cusomwidget', ':camera', ':commen', ':yuvhandler'
+include ':app', ':schedulemanager', ':cusomwidget', ':camera', ':commen', ':yuvhandler', ':wuxianxuanxiangka'

@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion BUILD_TOOLS_VERSION
+    buildToolsVersion "24.0.0 rc2"
 
     defaultConfig {
-        applicationId "com.jqyzyh.learn"
-        minSdkVersion 8
-        targetSdkVersion 23
+        applicationId "jqyzyh.myapplication"
+        minSdkVersion 7
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,9 +22,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23+'
-    compile project(':cusomwidget')
-    compile project(':schedulemanager')
-    compile project(':camera')
-`    compile project(':commen')
+    compile 'com.android.support:support-v4:23.4.0'
 }
