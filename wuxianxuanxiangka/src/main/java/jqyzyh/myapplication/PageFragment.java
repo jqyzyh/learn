@@ -36,4 +36,15 @@ public class PageFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d("PageFragment", "setUserVisibleHint==>" + isVisibleToUser);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

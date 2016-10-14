@@ -22,8 +22,8 @@ public class PathHandler implements View.OnTouchListener, ViewTreeObserver.OnGlo
     static final int MASK_GREEN = 0xff00;
     static final int MASK_BLUE = 0xff;
 
-    static final int BITMAP_WIDTH = 480;
-    static final int BITMAP_HEIGHT = 480;
+    static final int BITMAP_WIDTH = 640;
+    static final int BITMAP_HEIGHT = 960;
 
     private static final float TOUCH_TOLERANCE = 4;
 
@@ -127,6 +127,7 @@ public class PathHandler implements View.OnTouchListener, ViewTreeObserver.OnGlo
         height = (int) (height * scale);
         canvas.translate((BITMAP_WIDTH - width) / 2, (BITMAP_HEIGHT - height) / 2);
         canvas.scale(scale, scale);
+        canvas.drawBitmap(mResultBitmap, 0, 0, mPaint);
         canvas.drawPath(mPath, mPaint);
         canvas.restore();
         return bitmap;

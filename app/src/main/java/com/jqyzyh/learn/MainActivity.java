@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        new MyHandler(this);
         List<Method> methods = getMethods(WebViewClient.class);
 //        for(Method m : methods){
 //            Log.d("mylog", "=========================>" + m.getName());

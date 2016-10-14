@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.jqyzyh.learn"
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -27,4 +27,6 @@ dependencies {
     compile project(':schedulemanager')
     compile project(':camera')
     compile project(':commen')
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 }
