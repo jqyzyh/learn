@@ -20,10 +20,10 @@ public class MyHandler extends Handler {
         super();
         mContext = context;
 
-        if(context instanceof FragmentActivity){
-            FragmentActivity fa = (FragmentActivity) context;
-            fa.getSupportFragmentManager().beginTransaction().add(new StateFragment(), StateFragment.class.getName()).commit();
-        }
+//        if(context instanceof FragmentActivity){
+//            FragmentActivity fa = (FragmentActivity) context;
+//            fa.getSupportFragmentManager().beginTransaction().add(new StateFragment(), StateFragment.class.getName()).commit();
+//        }
     }
 
     @Override

@@ -30,7 +30,12 @@
         <activity android:name=".TestActivity" />
         <activity android:name=".PathPaintActivity" />
         <activity android:name=".WheelViewActivity" />
-        <activity android:name=".InputFilterActivity"></activity>
+        <activity android:name=".InputFilterActivity" />
+        <activity
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ListAnimHeaderActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -1,1 +1,1 @@
-include ':app', ':schedulemanager', ':cusomwidget', ':camera', ':commen', ':yuvhandler', ':wuxianxuanxiangka'
+include ':app', ':schedulemanager', ':cusomwidget', ':camera', ':commen', ':yuvhandler', ':wuxianxuanxiangka', ':jqyzyhrecyclerview'

@@ -135,14 +135,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void inputFilter(View v){
-        startActivity(new Intent(this, InputFilterActivity.class));
+        startActivity(new Intent(this, ScrollingActivity.class));
     }
 
     public void test(View v){
 
 //        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
 //
-        startActivity(new Intent(this, PathPaintActivity.class));
+        startActivity(new Intent(this, ListAnimHeaderActivity.class));
 //        IOSPupopMenu menu = new IOSPupopMenu(this);
 //        menu.addMenu("啊啊啊", Color.BLUE, null);
 //        menu.addMenu("啊啊啊", Color.BLUE, null);
