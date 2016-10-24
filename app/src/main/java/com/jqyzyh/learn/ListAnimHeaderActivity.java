@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import jqyzyh.iee.cusomwidget.pullrefreshlistview.OnRefreshListListener;
+import jqyzyh.iee.cusomwidget.pullrefreshlistview.PullRefreshListView;
+
 public class ListAnimHeaderActivity extends AppCompatActivity implements AbsListView.OnScrollListener {
-    ListView lv;
+    PullRefreshListView lv;
     private View loadingView;
 
     private boolean moveFirst;
@@ -55,17 +57,32 @@ public class ListAnimHeaderActivity extends AppCompatActivity implements AbsList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_anim_header);
-        lv = (ListView) findViewById(R.id.lv);
-        lv.addHeaderView(View.inflate(this, R.layout.header_test, null));
+        lv = (PullRefreshListView) findViewById(R.id.lv);
+        lv.setOnRefreshListListener(new OnRefreshListListener() {
+            @Override
+            public void onRefresh(PullRefreshListView listView) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        lv.onRefreshComplate();
+                    }
+                }, 2000);
+            }
+        });
+//        lv.addHeaderView(View.inflate(this, R.layout.header_test, null));
         lv.setAdapter(new MAdatper());
-        View l = View.inflate(this, R.layout.height_laoding, null);
-        l.measure(View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().heightPixels, ViewGroup.MeasureSpec.AT_MOST));
-        loadingHeight = l.getMeasuredHeight();
-        lv.addHeaderView(l);
-        loadingView = l.findViewById(R.id.loading);
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) loadingView.getLayoutParams();
-        lp.topMargin = -loadingHeight;
-        lv.setOnScrollListener(this);
+//        View l = View.inflate(this, R.layout.height_laoding, null);
+//        l.measure(View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().heightPixels, ViewGroup.MeasureSpec.AT_MOST));
+//        loadingHeight = l.getMeasuredHeight();
+//        lv.addHeaderView(l);
+//        loadingView = l.findViewById(R.id.loading);
+//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) loadingView.getLayoutParams();
+//        lp.topMargin = -loadingHeight;
+//        lv.setOnScrollListener(this);
+    }
+
+    public void refresh(View view){
+        lv.startRefreshing();
     }
 
     @Override
@@ -88,34 +105,34 @@ public class ListAnimHeaderActivity extends AppCompatActivity implements AbsList
 
     boolean lastState;
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        float dy = ev.getY() - lastY;
-        lastY = ev.getY();
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                if(touchMove(dy)){
-                    lastState = true;
-                    ev.setAction(MotionEvent.ACTION_UP);
-                    return true;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                shouqi();
-                if(lastState){
-                    return true;
-                }
-                break;
-        }
-
-        if(lastState){
-            lastState = false;
-            parentTouch(ev);
-        }
-
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        float dy = ev.getY() - lastY;
+//        lastY = ev.getY();
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_MOVE:
+//                if(touchMove(dy)){
+//                    lastState = true;
+//                    ev.setAction(MotionEvent.ACTION_UP);
+//                    return true;
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//            case MotionEvent.ACTION_CANCEL:
+//                shouqi();
+//                if(lastState){
+//                    return true;
+//                }
+//                break;
+//        }
+//
+//        if(lastState){
+//            lastState = false;
+//            parentTouch(ev);
+//        }
+//
+//        return super.dispatchTouchEvent(ev);
+//    }
 
 
     void shouqi(){
