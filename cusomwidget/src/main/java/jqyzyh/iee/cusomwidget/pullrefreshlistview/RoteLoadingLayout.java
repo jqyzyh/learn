@@ -40,7 +40,7 @@ public class RoteLoadingLayout implements ILoadingLayout{
     Map<Integer, CharSequence> mTextMap = new HashMap<>();
 
     public RoteLoadingLayout(Context context){
-        mRootView = View.inflate(context, R.layout.rote_list_header_laoding, null);
+        mRootView = View.inflate(context, R.layout.layout_rote_list_header_laoding, null);
         mTvTextView = (TextView) mRootView.findViewById(R.id.tv_list_loading);
         mIvIcon = (ImageView) mRootView.findViewById(R.id.iv_list_loading);
     }
