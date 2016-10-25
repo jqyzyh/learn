@@ -114,8 +114,8 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
     void moveFirst() {
         ViewGroup.LayoutParams lp = mLoadMoreStance.getLayoutParams();
         int stanceHeight = 0;
-        if (canRefresh()) {
-            if (mLoadMoreLayout != null) {
+        if (mLoadMoreLayout != null) {
+            if (canRefresh()) {
                 mLoadMoreLayout.getLoadingLayout().setVisibility(VISIBLE);
                 int firstPosition = getFirstVisiblePosition();
                 if (firstPosition > 2) {
@@ -127,19 +127,19 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
                     if (lp.height != 0) {
                         stanceHeight = 0;
                     }
-                }else{
+                } else {
                     int height = view.getBottom() - (firstView == null ? 0 : firstView.getTop());
                     if (height < getHeight()) {
                         stanceHeight = getHeight() - height - 40;
                     }
                 }
+            } else {
+                mLoadMoreLayout.getLoadingLayout().setVisibility(GONE);
+                stanceHeight = 0;
             }
-        }else{
-            mLoadMoreLayout.getLoadingLayout().setVisibility(GONE);
-            stanceHeight = 0;
         }
 
-        if(lp.height != stanceHeight){
+        if (lp.height != stanceHeight) {
             lp.height = stanceHeight;
             mLoadMoreStance.requestLayout();
         }
