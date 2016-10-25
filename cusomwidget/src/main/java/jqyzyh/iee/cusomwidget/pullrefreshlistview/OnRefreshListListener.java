@@ -6,4 +6,5 @@ package jqyzyh.iee.cusomwidget.pullrefreshlistview;
 
 public interface OnRefreshListListener {
     void onRefresh(PullRefreshListView listView);
+    void loadMore(PullRefreshListView listView);
 }

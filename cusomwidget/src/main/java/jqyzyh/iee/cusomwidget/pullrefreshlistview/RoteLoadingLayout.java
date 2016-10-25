@@ -14,6 +14,9 @@ import java.util.Map;
 import jqyzyh.iee.cusomwidget.R;
 
 import static android.animation.ValueAnimator.INFINITE;
+import static jqyzyh.iee.cusomwidget.pullrefreshlistview.PullRefreshListView.STATE_NONE;
+import static jqyzyh.iee.cusomwidget.pullrefreshlistview.PullRefreshListView.STATE_PULL_TO_REFRESH;
+import static jqyzyh.iee.cusomwidget.pullrefreshlistview.PullRefreshListView.STATE_RELEASE_TO_REFRESH;
 
 /**
  * Created by jqyzyh on 2016/10/24.
@@ -23,10 +26,18 @@ import static android.animation.ValueAnimator.INFINITE;
 public class RoteLoadingLayout implements ILoadingLayout{
     static final Map<Integer, CharSequence> default_text = new HashMap<>();
     static {
-        default_text.put(PullRefreshListView.STATE_NONE, "下拉加载");
-        default_text.put(PullRefreshListView.STATE_PULL_TO_REFRESH, "下拉加载");
-        default_text.put(PullRefreshListView.STATE_RELEASE_TO_REFRESH, "释放加载");
+        default_text.put(STATE_NONE, "下拉加载");
+        default_text.put(STATE_PULL_TO_REFRESH, "下拉加载");
+        default_text.put(STATE_RELEASE_TO_REFRESH, "释放加载");
         default_text.put(PullRefreshListView.STATE_REFRESHING, "正在载入...");
+    }
+
+    public static RoteLoadingLayout createDefaultLoadMoreLayout(Context context){
+        RoteLoadingLayout moreLoad = new RoteLoadingLayout(context);
+        moreLoad.setStateText(STATE_NONE, "正在载入...");
+        moreLoad.setStateText(STATE_PULL_TO_REFRESH, "正在载入...");
+        moreLoad.setStateText(STATE_RELEASE_TO_REFRESH, "正在载入...");
+        return moreLoad;
     }
 
     View mRootView;
@@ -40,7 +51,7 @@ public class RoteLoadingLayout implements ILoadingLayout{
     Map<Integer, CharSequence> mTextMap = new HashMap<>();
 
     public RoteLoadingLayout(Context context){
-        mRootView = View.inflate(context, R.layout.layout_rote_list_header_laoding, null);
+        mRootView = View.inflate(context, R.layout.layout_rote_list_laoding_item, null);
         mTvTextView = (TextView) mRootView.findViewById(R.id.tv_list_loading);
         mIvIcon = (ImageView) mRootView.findViewById(R.id.iv_list_loading);
     }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import jqyzyh.iee.cusomwidget.pullrefreshlistview.OnRefreshListListener;
@@ -25,7 +24,7 @@ public class ListAnimHeaderActivity extends AppCompatActivity implements AbsList
     private int loadingHeight;
 
     private Handler mHandler = new Handler();
-
+    MAdatper mAdatper;
     long startTime;
 
     private Runnable mRunnable = new Runnable() {
@@ -65,12 +64,27 @@ public class ListAnimHeaderActivity extends AppCompatActivity implements AbsList
                     @Override
                     public void run() {
                         lv.onRefreshComplate();
+                        count = 2;
+                        mAdatper.notifyDataSetInvalidated();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void loadMore(PullRefreshListView listView) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        lv.onRefreshComplate();
+                        count += 2;
+                        mAdatper.notifyDataSetChanged();
                     }
                 }, 2000);
             }
         });
 //        lv.addHeaderView(View.inflate(this, R.layout.header_test, null));
-        lv.setAdapter(new MAdatper());
+        mAdatper = new MAdatper();
+        lv.setAdapter(mAdatper);
 //        View l = View.inflate(this, R.layout.height_laoding, null);
 //        l.measure(View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(getResources().getDisplayMetrics().heightPixels, ViewGroup.MeasureSpec.AT_MOST));
 //        loadingHeight = l.getMeasuredHeight();
@@ -188,12 +202,12 @@ public class ListAnimHeaderActivity extends AppCompatActivity implements AbsList
 
         return flag;
     }
+    int count = 2;
 
     class MAdatper extends BaseAdapter {
-
         @Override
         public int getCount() {
-            return 20;
+            return count;
         }
 
         @Override

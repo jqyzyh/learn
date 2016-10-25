@@ -2,7 +2,6 @@ package jqyzyh.iee.cusomwidget.pullrefreshlistview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
@@ -18,7 +18,7 @@ import android.widget.ListView;
  * 很吊的下拉刷新控件
  */
 
-public class PullRefreshListView extends ListView implements AbsListView.OnScrollListener{
+public class PullRefreshListView extends ListView implements AbsListView.OnScrollListener {
 
     static final int STATE_NONE = 0;
     static final int STATE_PULL_TO_REFRESH = 1;//拖动中
@@ -31,7 +31,13 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
     private LinearLayout mLoadingHeader;
 
+    private LinearLayout mLoadingFooter;
+
+    private View mLoadMoreStance;
+
     private ILoadingLayout mLoadingLayout;
+
+    private ILoadingLayout mLoadMoreLayout;
 
     private int mState = STATE_NONE;
 
@@ -75,13 +81,15 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
     }
 
     private void initView(Context context) {
-        if(mLoadingHeader != null){
+        if (mLoadingHeader != null) {
             return;
         }
         mListHeader = new FrameLayout(context);
         mLoadingHeader = new LinearLayout(context);
+        mLoadMoreStance = new View(context);
         addHeaderView(mListHeader);
         addHeaderView(mLoadingHeader);
+        addFooterView(mLoadMoreStance);
         setLoadingLayout(new RoteLoadingLayout(context));
 
         super.setOnScrollListener(this);
@@ -100,6 +108,64 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
         mMyScrollListener = l;
     }
 
+    /**
+     * 移动到第一个了
+     */
+    void moveFirst() {
+        ViewGroup.LayoutParams lp = mLoadMoreStance.getLayoutParams();
+        int stanceHeight = 0;
+        if (canRefresh()) {
+            if (mLoadMoreLayout != null) {
+                mLoadMoreLayout.getLoadingLayout().setVisibility(VISIBLE);
+                int firstPosition = getFirstVisiblePosition();
+                if (firstPosition > 2) {
+                    return;
+                }
+                View firstView = getChildAt(2 - firstPosition);
+                View view = getChildAt(getAdapter().getCount() - firstPosition - 3);
+                if (firstView == null || view == null) {
+                    if (lp.height != 0) {
+                        stanceHeight = 0;
+                    }
+                }else{
+                    int height = view.getBottom() - (firstView == null ? 0 : firstView.getTop());
+                    if (height < getHeight()) {
+                        stanceHeight = getHeight() - height - 40;
+                    }
+                }
+            }
+        }else{
+            mLoadMoreLayout.getLoadingLayout().setVisibility(GONE);
+            stanceHeight = 0;
+        }
+
+        if(lp.height != stanceHeight){
+            lp.height = stanceHeight;
+            mLoadMoreStance.requestLayout();
+        }
+
+    }
+
+    boolean checkMoreLayout() {
+        if (getAdapter() == null) {
+            return false;
+        }
+
+        if (mLoadingFooter == null || mLoadMoreLayout == null) {
+            return false;
+        }
+
+        if (mLoadingFooter.getParent() == null || mLoadingFooter.getHeight() == 0) {
+            return false;
+        }
+
+        if (mLoadingFooter.getBottom() >= getHeight()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public void setLoadingLayout(ILoadingLayout loadingLayout) {
         if (loadingLayout == null) {
             return;
@@ -113,98 +179,127 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
         lp.topMargin = -mLoadingHeight;
     }
 
-    public void setAnimHeader(View headerView){
+    public void setLoadMoreLayout(ILoadingLayout loadMoreLayout) {
+        if (mLoadingFooter == null) {
+            mLoadingFooter = new LinearLayout(getContext());
+            addFooterView(mLoadingFooter);
+        }
+        mLoadingFooter.removeAllViews();
+        mLoadMoreLayout = loadMoreLayout;
+        if (loadMoreLayout == null) {
+            return;
+        }
+        mLoadingFooter.addView(mLoadMoreLayout.getLoadingLayout(), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+    }
+
+    public void setAnimHeader(View headerView) {
         mListHeader.removeAllViews();
         mLoadingHeader.addView(headerView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
-    void setState(int state){
-        if(mState == state){
+    void setState(int state) {
+        if (mState == state) {
             return;
         }
         mState = state;
-        mLoadingLayout.setState(mState);
+        if (mLoadingLayout != null) {
+            mLoadingLayout.setState(mState);
+        }
+        if (mLoadMoreLayout != null) {
+            mLoadMoreLayout.setState(STATE_REFRESHING == mState ? STATE_REFRESHING : STATE_NONE);
+        }
     }
 
     void touchMove(float dy) {
         View loadingView = getLoadingView();
 
-        if(loadingView == null){
+        if (loadingView == null) {
             return;
         }
 
         MarginLayoutParams lp = (MarginLayoutParams) loadingView.getLayoutParams();
-        if(dy > 0){//向下
+        if (dy > 0) {//向下
             if (!moveFirst) {
                 setState(STATE_NONE);
-            }else{
-                if(lp.topMargin > 0){
+            } else {
+                if (lp.topMargin > 0) {
                     setState(STATE_RELEASE_TO_REFRESH);
                     dy = dy * Math.max(0, mLoadingHeight - lp.topMargin) / mLoadingHeight;
-                }else {
+                } else {
                     setState(STATE_PULL_TO_REFRESH);
                 }
                 lp.topMargin += dy;
                 mLoadingLayout.offsetY((lp.topMargin + mLoadingHeight) * 1.0f / mLoadingHeight);
                 loadingView.requestLayout();
             }
-        }else{//向上
-            if(lp.topMargin > -mLoadingHeight){
-                if(lp.topMargin < 0){
+        } else {//向上
+            if (lp.topMargin > -mLoadingHeight) {
+                if (lp.topMargin < 0) {
                     setState(STATE_PULL_TO_REFRESH);
                 }
                 lp.topMargin += dy;
-                if(lp.topMargin <= -mLoadingHeight){
+                if (lp.topMargin <= -mLoadingHeight) {
                     lp.topMargin = -mLoadingHeight;
                     setState(STATE_NONE);
                 }
                 loadingView.requestLayout();
                 mLoadingLayout.offsetY((lp.topMargin + mLoadingHeight) * 1.0f / mLoadingHeight);
-            }else{
+            } else {
                 setState(STATE_NONE);
             }
         }
     }
 
-    public void startRefreshing(){
-        if(STATE_REFRESHING == mState){
+    public void startRefreshing() {
+        if (getAdapter() == null) {
+            return;
+        }
+
+        if (STATE_REFRESHING == mState) {
             return;
         }
         setState(STATE_REFRESHING);
         showLoadingViewRunnable.start();
     }
 
-    public void onRefreshComplate(){
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void onRefreshComplate() {
+        if (mLoadMoreLayout != null) {
+            mLoadMoreLayout.getLoadingLayout().setVisibility(GONE);
+            mLoadMoreStance.getLayoutParams().height = 0;
+            mLoadMoreStance.requestLayout();
+        }
         setState(STATE_PULL_TO_REFRESH);
         resetLoadingView(true);
     }
 
-    void resetLoadingView(boolean anim){
+    void resetLoadingView(boolean anim) {
         View loadingView = getLoadingView();
 
-        if(loadingView == null){
+        if (loadingView == null) {
             return;
         }
 
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) loadingView.getLayoutParams();
-        if(lp.topMargin == -mLoadingHeight){
+        if (lp.topMargin == -mLoadingHeight) {
             setState(STATE_NONE);
             return;
         }
 
-        if(anim){
+        if (anim) {
             mShouqiStartTime = System.currentTimeMillis();
             mShouqiing = true;
             packUpRunnable.start();
-        }else{
+        } else {
             setState(STATE_NONE);
             lp.topMargin = -mLoadingHeight;
             loadingView.requestLayout();
         }
     }
 
-    private void touchUp(){
-        if(STATE_RELEASE_TO_REFRESH == mState){//释放刷新状态
+    private void touchUp() {
+        if (STATE_RELEASE_TO_REFRESH == mState) {//释放刷新状态
             refreshList();
             resetLoadingView(true);
             return;
@@ -212,32 +307,40 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
         resetLoadingView(true);
     }
 
-    private View getLoadingView(){
+    private View getLoadingView() {
         return mLoadingLayout == null ? null : mLoadingLayout.getLoadingLayout();
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getAdapter() == null) {
+            return super.dispatchTouchEvent(ev);
+        }
         float dy = ev.getY() - mLastTouchY;
         mLastTouchY = ev.getY();
 
-        if(STATE_REFRESHING != mState){
+        if (STATE_REFRESHING != mState) {
             switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    moveFirst();
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     touchMove(dy);
-                    if(STATE_NONE != mState){
+                    if (STATE_NONE != mState) {
                         return true;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                     touchUp();
-                    if(STATE_NONE != mState){
+                    if (STATE_NONE != mState) {
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        super.dispatchTouchEvent(ev);
                         return true;
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     resetLoadingView(true);
-                    if(STATE_NONE != mState){
+                    if (STATE_NONE != mState) {
                         return true;
                     }
                     break;
@@ -249,7 +352,7 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if(mMyScrollListener != null){
+        if (mMyScrollListener != null) {
             mMyScrollListener.onScrollStateChanged(view, scrollState);
         }
     }
@@ -261,44 +364,60 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
         } else {
             View child = view.getChildAt(0);
             moveFirst = child.getTop() >= 0;
+            moveFirst();
         }
-        if(mMyScrollListener != null){
+
+        if (STATE_REFRESHING != mState) {
+            ListAdapter adapter = getAdapter();
+            if (canRefresh() && checkMoreLayout() && mLoadingFooter.getBottom() <= getHeight()) {//加载更多
+                if (mOnRefreshListListener != null) {
+                    setState(STATE_REFRESHING);
+                    mOnRefreshListListener.loadMore(this);
+                }
+            }
+        }
+
+        if (mMyScrollListener != null) {
             mMyScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
     }
 
-    void refreshList(){
-        if(mOnRefreshListListener != null){
+    void refreshList() {
+        if (mOnRefreshListListener != null) {
             setState(STATE_REFRESHING);
             mOnRefreshListListener.onRefresh(this);
-        }else{
+        } else {
             onRefreshComplate();
         }
     }
 
-    class PackUpRunnable implements Runnable{
+    boolean canRefresh() {
+        return getAdapter() != null && getAdapter().getCount() > 4;
+    }
+
+    class PackUpRunnable implements Runnable {
 
         long startTime;
         boolean running;
 
-        public void start(){
+        public void start() {
             running = true;
             startTime = System.currentTimeMillis();
             post(this);
         }
 
-        public void stop(){
+        public void stop() {
             running = false;
         }
 
         @Override
         public void run() {
-            if(!running){
+            if (!running) {
                 return;
             }
 
             View loadingView = getLoadingView();
-            if(loadingView == null){
+            if (loadingView == null) {
                 return;
             }
 
@@ -309,59 +428,59 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
             startTime = System.currentTimeMillis();
 
-            if(STATE_REFRESHING == mState){
-                if(lp.topMargin < 0){
+            if (STATE_REFRESHING == mState) {
+                if (lp.topMargin < 0) {
                     lp.topMargin = 0;
                     running = false;
                 }
-            }else{
-                if(lp.topMargin <= -mLoadingHeight){
+            } else {
+                if (lp.topMargin <= -mLoadingHeight) {
                     setState(STATE_NONE);
                     lp.topMargin = -mLoadingHeight;
                     running = false;
-                }else if(lp.topMargin > 0){
+                } else if (lp.topMargin > 0) {
                     setState(STATE_RELEASE_TO_REFRESH);
-                }else{
+                } else {
                     setState(STATE_PULL_TO_REFRESH);
                 }
             }
 
             loadingView.requestLayout();
 
-            if(running){
+            if (running) {
                 post(this);
             }
         }
     }
 
-    class ShowLoadingViewRunnable implements Runnable{
+    class ShowLoadingViewRunnable implements Runnable {
 
         long startTime;
         boolean running;
 
-        public void start(){
+        public void start() {
             running = true;
             startTime = System.currentTimeMillis();
             post(this);
         }
 
-        public void stop(){
+        public void stop() {
             running = false;
         }
 
         @Override
         public void run() {
 //            LogUtils.d("", "mylog" + mState);
-            if(STATE_REFRESHING != mState){
+            if (STATE_REFRESHING != mState) {
                 running = false;
             }
 
-            if(!running){
+            if (!running) {
                 return;
             }
 
             View loadingView = getLoadingView();
-            if(loadingView == null){
+            if (loadingView == null) {
                 return;
             }
 
@@ -373,7 +492,7 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
             startTime = System.currentTimeMillis();
 
-            if(lp.topMargin >= 0){
+            if (lp.topMargin >= 0) {
                 lp.topMargin = 0;
                 running = false;
                 refreshList();
@@ -381,7 +500,7 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
             loadingView.requestLayout();
 
-            if(running){
+            if (running) {
                 post(this);
             }
         }
