@@ -58,17 +58,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d("mylog", "=========================>WebViewClientClassicExt=========================>");
         try {
             Class cls = Class.forName("android.webkit.WebViewClientClassicExt");
-              methods = getMethods(cls);
-            for(Method m : methods){
+            methods = getMethods(cls);
+            for (Method m : methods) {
                 Log.d("mylog", "=========================>" + m.getName());
                 String params = "";
                 Class<?>[] clss = m.getParameterTypes();
-                if(clss == null || clss.length == 0){
+                if (clss == null || clss.length == 0) {
 
                     Log.d("mylog", "params==>null");
-                }else{
+                } else {
 
-                    for(Class c : clss){
+                    for (Class c : clss) {
                         params += c.getName() + ",";
                     }
 
@@ -82,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
         Log.d("mylog", "=========================>WebChromeClient=========================>");
 
         methods = getMethods(WebChromeClient.class);
-        for(Method m : methods){
+        for (Method m : methods) {
             Log.d("mylog", "=========================>" + m.getName());
             String params = "";
             Class<?>[] clss = m.getParameterTypes();
-            if(clss == null || clss.length == 0){
+            if (clss == null || clss.length == 0) {
 
                 Log.d("mylog", "params==>null");
-            }else{
+            } else {
 
-                for(Class cls : clss){
+                for (Class cls : clss) {
                     params += cls.getName() + ",";
                 }
 
@@ -104,13 +104,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public List<Method> getMethods(Class cls){
+    public List<Method> getMethods(Class cls) {
         List<Method> ret = new ArrayList<>();
         Method[] ms = cls.getMethods();
-        for(Method m : ms){
+        for (Method m : ms) {
             ret.add(m);
         }
-        if(cls.getSuperclass() != null){
+        if (cls.getSuperclass() != null) {
             ret.addAll(getMethods(cls.getSuperclass()));
         }
         return ret;
@@ -118,27 +118,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void showimage(View v){
+    public void showimage(View v) {
         startActivity(new Intent(this, ImageActivity.class));
     }
 
-    public void schedule(View v){
+    public void schedule(View v) {
         startActivity(new Intent(this, ScheduleActivity.class));
     }
 
-    public void camera(View v){
+    public void camera(View v) {
         startActivity(new Intent(this, CameraActivity.class));
     }
 
-    public void webview(View v){
+    public void webview(View v) {
         startActivity(new Intent(this, WebViewActivity.class));
     }
 
-    public void inputFilter(View v){
+    public void inputFilter(View v) {
         startActivity(new Intent(this, ScrollingActivity.class));
     }
 
-    public void test(View v){
+    public void test(View v) {
 
 //        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
 //
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 //        menu.addMenu("啊啊啊", Color.BLUE, null);
 //        menu.addMenu("啊啊啊", Color.BLUE, null);
 //        menu.show();
-        if(true){
+        if (true) {
             return;
         }
         new Thread(new Runnable() {
@@ -175,20 +175,17 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("mylog", "getResponseCode==>" + code);
 
                     InputStream is = connection.getInputStream();
-                    byte[] buffer = new byte[4*1024];
-                    int len ;
+                    byte[] buffer = new byte[4 * 1024];
+                    int len;
 
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    while((len = is.read(buffer)) != -1){
+                    while ((len = is.read(buffer)) != -1) {
                         os.write(buffer, 0, len);
                         os.flush();
                     }
 
                     String string = new String(os.toByteArray());
                     Log.d("mylog", "response ====>" + string);
-
-
-
 
 
                 } catch (Exception e) {
@@ -200,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendBinBin(){
+    public void sendBinBin() {
 
 
         StringBuilder xml = new StringBuilder();
@@ -230,10 +227,10 @@ public class MainActivity extends AppCompatActivity {
             int code = conn.getResponseCode();
             Log.d("mylog", "response code ====>" + code);
             InputStream is = conn.getInputStream();
-            byte[] buffer = new byte[4*1024];
-            int len ;
+            byte[] buffer = new byte[4 * 1024];
+            int len;
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            while((len = is.read(buffer)) != -1){
+            while ((len = is.read(buffer)) != -1) {
                 os.write(buffer, 0, len);
                 os.flush();
             }
@@ -244,7 +241,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void wheel(View v){
+    public void wheel(View v) {
         startActivity(new Intent(this, WheelViewActivity.class));
+    }
+
+    public void playsound(View view) {
+        startActivity(new Intent(this, PlaySoundActivity.class));
     }
 }

@@ -195,7 +195,7 @@ public class PullRefreshListView extends ListView implements AbsListView.OnScrol
 
     public void setAnimHeader(View headerView) {
         mListHeader.removeAllViews();
-        mLoadingHeader.addView(headerView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mListHeader.addView(headerView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     void setState(int state) {
