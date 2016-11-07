@@ -3,8 +3,7 @@
     package="com.jqyzyh.learn">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
         android:allowBackup="false"
@@ -40,7 +39,10 @@
         <activity
             android:name=".ListAnimHeaderActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".PlaySoundActivity" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".PlaySoundActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".LoveActivity"></activity>
     </application>
 
 </manifest>

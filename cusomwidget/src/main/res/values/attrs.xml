@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundRectImageView">
+    <attr name="imageRadius" format="dimension"/>
+    <attr name="roundType" format="enum">
+        <enum name="all" value="1"/>
+        <enum name="left" value="2"/>
+        <enum name="rigth" value="3"/>
+        <enum name="top" value="4"/>
+        <enum name="bottom" value="5"/>
+    </attr>
+    </declare-styleable>
+</resources>
