@@ -4,5 +4,6 @@
     <color name="bg_color_ios_popup_menu_light">#ccffffff</color>
     <color name="text_color_ios_popup_menu_title">#aaa</color>
     <color name="text_color_ios_popup_menu_button">#0079ff</color>
+    <color name="viewfinder_mask">#60000000</color>
 
 </resources>
