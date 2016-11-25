@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 
-
         Log.d("mylog", "=========================>WebViewClientClassicExt=========================>");
         try {
             Class cls = Class.forName("android.webkit.WebViewClientClassicExt");
