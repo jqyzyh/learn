@@ -38,4 +38,9 @@
         android:text="扬声器"
         android:onClick="yangshengqi"
         android:layout_height="wrap_content" />
+
+    <SeekBar
+        android:id="@+id/sb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
