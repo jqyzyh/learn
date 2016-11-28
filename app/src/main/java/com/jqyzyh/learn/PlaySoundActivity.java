@@ -70,7 +70,9 @@ public class PlaySoundActivity extends AppCompatActivity {
         }
         tv_name.setText(path);
 
-        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(new File(str1)));
+//        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(new File(str1)));
+
+        mediaPlayer = MediaPlayer.create(this, Uri.parse("http://60.205.104.120:3030/historical/atths/org/000/000/040/694/audio/291aaf8f-2eea-4889-a595-4bf420be2d57.mp3"));
 
         int duration = mediaPlayer.getDuration();
         sb.setMax(duration);
