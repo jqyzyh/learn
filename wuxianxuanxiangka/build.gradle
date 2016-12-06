@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "jqyzyh.myapplication"
-        minSdkVersion 7
+        minSdkVersion 9
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:24.+'
+    compile 'com.chanven.lib:cptr:1.1.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-v4:23.4.0'
+    compile project(':cusomwidget')
 }

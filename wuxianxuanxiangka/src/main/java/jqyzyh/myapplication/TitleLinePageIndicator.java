@@ -86,7 +86,7 @@ public class TitleLinePageIndicator extends View implements ViewPager.OnPageChan
         for(int i = 0; i < count; i ++){
             CharSequence title = pagerAdapter.getPageTitle(i);
             if(title == null){
-                Rect rect =
+//                Rect rect =
             }
         }
     }
