@@ -1,5 +1,9 @@
 package jqyzyh.iee.commen;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,5 +25,35 @@ public class CommonUtils {
     public boolean checkMobileNo(String mobileNo){
         Matcher matcher = PATTERN_MOBILE.matcher(mobileNo);
         return matcher.matches();
+    }
+
+    /**
+     * 获取app vercode
+     * @param context
+     * @return
+     */
+    public int getAppVersionCode(Context context){
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取app versionName
+     * @param context
+     * @return
+     */
+    public String getAppVersionName(Context context){
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

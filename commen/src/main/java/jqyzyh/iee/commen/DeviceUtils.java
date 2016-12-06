@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
@@ -96,7 +98,24 @@ public class DeviceUtils {
         return tm.getDeviceId();
     }
 
+    /**
+     * 获取是否有网络 只判断wfii跟移动网络</br>
+     * 需要权限{@link android.Manifest.permission#ACCESS_NETWORK_STATE}
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkConnection(Context context){
+        try {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+            if(networkInfo == null){
+                return false;
+            }
 
-
-
+            return networkInfo.isAvailable() && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI || networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return true;
+    }
 }
