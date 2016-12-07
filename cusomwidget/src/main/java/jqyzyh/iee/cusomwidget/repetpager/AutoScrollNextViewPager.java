@@ -73,7 +73,7 @@ public class AutoScrollNextViewPager extends ViewPager {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             // 记录按下时候的坐标，切记不可用 downP = curP ，这样在改变curP的时候，downP也会改变
             mDownPosition.x = ev.getX();
@@ -107,7 +107,7 @@ public class AutoScrollNextViewPager extends ViewPager {
         }
 
 
-        return super.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
     }
 
     private void _startAutoSrcoll(){

@@ -46,7 +46,7 @@ public abstract class RepetAdapter extends PagerAdapter implements ViewPager.OnP
         destroyRealItem(container, getRealPosition(position), object);
     }
 
-    protected int getRealPosition(int position){
+    public final int getRealPosition(int position){
         if(position == 0){
             position = getRealCount();
         }if(position == getRealCount() + 1){
