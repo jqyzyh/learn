@@ -19,15 +19,14 @@ public class MediaPlayerManagener {
         return static_instance;
     }
 
-    HashMap<String, IMediaPlayerDelegate> mediaPool = new HashMap<>();
+    HashMap<String, MediaPlayerDelegateImpl> mediaPool = new HashMap<>();
 
-    public IMediaPlayerDelegate getMedia(Context context, String path){
-        IMediaPlayerDelegate ret = mediaPool.get(path);
+    public MediaPlayerDelegateImpl getMedia(Context context, String path){
+        MediaPlayerDelegateImpl ret = mediaPool.get(path);
         if(ret == null){
-            MediaPlayerDelegateImpl delegate = new MediaPlayerDelegateImpl(context);
-            delegate.loadPath(path);
-            mediaPool.put(path, delegate);
-            ret = delegate;
+            ret = new MediaPlayerDelegateImpl(context);
+            ret.loadPath(path);
+            mediaPool.put(path, ret);
         }
         return ret;
     }

@@ -13,6 +13,9 @@ public interface IMediaPlayerDelegate {
 
     void setSurface(Surface surface);
 
+    void addVideoChangeSizeListener(MediaPlayer.OnVideoSizeChangedListener listener);
+    void removeVideoChangeSizeListener(MediaPlayer.OnVideoSizeChangedListener listener);
+
     void destorySurface(Surface surface);
 
     void start();
@@ -20,10 +23,10 @@ public interface IMediaPlayerDelegate {
     void pause();
     void release();
 
-    int     getDuration();
-    int     getCurrentPosition();
-    void    seekTo(int pos);
-    int     getBufferPercentage();
+    int getDuration();
+    int getCurrentPosition();
+    void seekTo(int pos);
+    int getBufferPercentage();
 
     boolean isPlaying();
 }

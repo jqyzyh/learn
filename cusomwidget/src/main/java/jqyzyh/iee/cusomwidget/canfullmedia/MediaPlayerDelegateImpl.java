@@ -9,10 +9,14 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.view.Surface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jqyzyh on 2016/12/9.
@@ -21,7 +25,7 @@ import android.view.Surface;
 public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
         OnPreparedListener, OnCompletionListener,
         OnErrorListener, OnInfoListener,
-        OnBufferingUpdateListener {
+        OnBufferingUpdateListener, OnVideoSizeChangedListener {
 
     /**
      * 错误
@@ -75,6 +79,7 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
     private OnErrorListener onErrorListener;
     private OnInfoListener onInfoListener;
     private OnBufferingUpdateListener onBufferingUpdateListener;
+    private List<OnVideoSizeChangedListener> onVideoSizeChangedListeners = new ArrayList<>();
 
     public MediaPlayerDelegateImpl(Context context) {
         mContext = context.getApplicationContext();
@@ -127,6 +132,26 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
                 mCurrentState != STATE_PREPARING);
     }
 
+    public void setOnPreparedListener(OnPreparedListener onPreparedListener) {
+        this.onPreparedListener = onPreparedListener;
+    }
+
+    public void setOnCompletionListener(OnCompletionListener onCompletionListener) {
+        this.onCompletionListener = onCompletionListener;
+    }
+
+    public void setOnErrorListener(OnErrorListener onErrorListener) {
+        this.onErrorListener = onErrorListener;
+    }
+
+    public void setOnInfoListener(OnInfoListener onInfoListener) {
+        this.onInfoListener = onInfoListener;
+    }
+
+    public void setOnBufferingUpdateListener(OnBufferingUpdateListener onBufferingUpdateListener) {
+        this.onBufferingUpdateListener = onBufferingUpdateListener;
+    }
+
     @Override
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
@@ -135,6 +160,9 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void setSurface(Surface surface) {
+        if(mCurSurface == surface){
+            return;
+        }
         if(mMediaPlayer == null){
             mTargetSurface = surface;
         }else{
@@ -142,6 +170,18 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
             mCurSurface = surface;
             mTargetSurface = null;
         }
+    }
+
+    @Override
+    public void addVideoChangeSizeListener(MediaPlayer.OnVideoSizeChangedListener listener) {
+        if(!onVideoSizeChangedListeners.contains(listener)){
+            onVideoSizeChangedListeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeVideoChangeSizeListener(MediaPlayer.OnVideoSizeChangedListener listener) {
+        onVideoSizeChangedListeners.remove(listener);
     }
 
     @Override
@@ -278,6 +318,10 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
                 if(onPreparedListener != null){
                     onPreparedListener.onPrepared(mp);
                 }
+
+                for(OnVideoSizeChangedListener listener : onVideoSizeChangedListeners){
+                    listener.onVideoSizeChanged(mp, mp.getVideoWidth(), mp.getVideoHeight());
+                }
             }
         });
 
@@ -289,5 +333,10 @@ public class MediaPlayerDelegateImpl implements IMediaPlayerDelegate,
         if(onBufferingUpdateListener != null){
             onBufferingUpdateListener.onBufferingUpdate(mp, percent);
         }
+    }
+
+    @Override
+    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+        
     }
 }

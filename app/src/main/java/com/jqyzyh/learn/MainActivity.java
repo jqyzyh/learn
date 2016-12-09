@@ -141,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoveActivity.class));
     }
 
+    public void playvideo(View v){
+        startActivity(new Intent(this, PlayVideoActivity.class));
+    }
+
     public void test(View v) {
 
 //        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();

@@ -26,8 +26,10 @@
             android:name=".ScheduleActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".WebViewActivity" android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".WebViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
         <activity android:name=".TestActivity" />
         <activity android:name=".PathPaintActivity" />
         <activity android:name=".WheelViewActivity" />
@@ -42,7 +44,9 @@
         <activity
             android:name=".PlaySoundActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".LoveActivity"></activity>
+        <activity android:name=".LoveActivity" />
+        <activity android:name=".PlayVideoActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".FullWindowVideoActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>
