@@ -373,7 +373,7 @@ public class ImageHandler implements View.OnTouchListener,
     }
 
     boolean checkEnable() {
-        return getDrawable() != null && !_scaleActioner.isRunning();
+        return getDrawable() != null && !_scaleActioner.isRunning() && _matrix != null;
     }
 
     @Override
@@ -395,6 +395,10 @@ public class ImageHandler implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if(!checkEnable()){
+            return false;
+        }
+
         boolean sgdRet = _scaleGestureDetector.onTouchEvent(event);
         boolean gdRet = _gestureDetector.onTouchEvent(event);
 
