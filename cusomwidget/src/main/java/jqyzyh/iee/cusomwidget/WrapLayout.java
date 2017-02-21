@@ -111,16 +111,16 @@ public class WrapLayout extends ViewGroup {
         int measuredWidth;
         int measuredHeight;
 
-        if (MeasureSpec.AT_MOST == widthMode) {
-            measuredWidth = Math.min(realWidth, width) + getPaddingLeft() + getPaddingRight();
-        } else {
+        if(MeasureSpec.EXACTLY == heightMode){
             measuredWidth = width + getPaddingLeft() + getPaddingRight();
+        } else {
+            measuredWidth = Math.min(realWidth, width) + getPaddingLeft() + getPaddingRight();
         }
 
-        if (MeasureSpec.AT_MOST == heightMode) {
-            measuredHeight = Math.max(childLayouts.get(childLayouts.size() - 1).pointY + curHeight, height) + getPaddingTop() + getPaddingBottom();
-        } else {
+        if(MeasureSpec.EXACTLY == heightMode){
             measuredHeight = height + getPaddingTop() + getPaddingBottom();
+        }else{
+            measuredHeight = Math.max(childLayouts.get(childLayouts.size() - 1).pointY + curHeight, height) + getPaddingTop() + getPaddingBottom();
         }
 
         setMeasuredDimension(measuredWidth, measuredHeight);
