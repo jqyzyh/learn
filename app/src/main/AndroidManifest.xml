@@ -45,8 +45,14 @@
             android:name=".PlaySoundActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".LoveActivity" />
-        <activity android:name=".PlayVideoActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".FullWindowVideoActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+        <activity
+            android:name=".PlayVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FullWindowVideoActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity android:name=".WrapLayoutActivity"></activity>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
+import android.widget.GridView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -254,5 +255,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void playsound(View view) {
         startActivity(new Intent(this, PlaySoundActivity.class));
+    }
+
+    public void wrapLayout(View view){
+        startActivity(new Intent(this, WrapLayoutActivity.class));
     }
 }
