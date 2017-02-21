@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,7 +153,6 @@ public class WrapLayout extends ViewGroup {
             for (int i = cl.startIndex; i < childCount; i++) {
                 View child = getChildAt(i);
                 int curRight = curX + child.getMeasuredWidth();
-                Log.i("mylog", i + "==>" + curX + "," + curRight);
                 child.layout(curX, cl.pointY, curRight, cl.pointY + child.getMeasuredHeight());
                 curX = curRight + mHorizontalSpacing;
             }
@@ -186,22 +184,10 @@ public class WrapLayout extends ViewGroup {
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-            Log.d("mylog", "c " + attrs);
         }
 
         public LayoutParams(int width, int height) {
             super(width, height);
-            Log.d("mylog", width + "，" + width);
-        }
-
-        public LayoutParams(MarginLayoutParams source) {
-            super(source);
-            Log.d("mylog", "MarginLayoutParams");
-        }
-
-        public LayoutParams(ViewGroup.LayoutParams source) {
-            super(source);
-            Log.d("mylog", "ViewGroup LayoutParams");
         }
     }
 
