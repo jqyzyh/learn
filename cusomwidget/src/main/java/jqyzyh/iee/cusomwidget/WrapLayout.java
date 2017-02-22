@@ -111,10 +111,10 @@ public class WrapLayout extends ViewGroup {
         int measuredWidth;
         int measuredHeight;
 
-        if(MeasureSpec.EXACTLY == heightMode){
-            measuredWidth = width + getPaddingLeft() + getPaddingRight();
-        } else {
+        if(MeasureSpec.AT_MOST == heightMode){
             measuredWidth = Math.min(realWidth, width) + getPaddingLeft() + getPaddingRight();
+        } else {
+            measuredWidth = width + getPaddingLeft() + getPaddingRight();
         }
 
         if(MeasureSpec.EXACTLY == heightMode){
