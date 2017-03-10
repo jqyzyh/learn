@@ -16,15 +16,16 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /**
- * Created by yuhang on 2016/3/16.
+ * @author yuhang
  * 圆角矩形控件
  */
-public class RoundRactImageView extends ImageView{
+public class RoundRactImageView extends ImageView {
     public static final int TYPE_ALL = 1;
     public static final int TYPE_LEFT = 2;
     public static final int TYPE_RIGHT = 3;
     public static final int TYPE_TOP = 4;
-    public static final int TYPE_BOTTOm = 5;
+    public static final int TYPE_BOTTOM = 5;
+    public static final int TYPE_CIRCLE = 6;
     private Paint mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private BitmapShader mBitmapShader;
     private Matrix mMatrix = new Matrix();
@@ -32,9 +33,16 @@ public class RoundRactImageView extends ImageView{
     private int mRadius;
     private int mType = TYPE_ALL;
 
+    private Drawable curDrawable;
+
     public RoundRactImageView(Context context) {
         super(context);
         init(context, null);
+    }
+
+    @Override
+    public void setImageResource(int resId) {
+        super.setImageResource(resId);
     }
 
     public RoundRactImageView(Context context, AttributeSet attrs) {
@@ -52,7 +60,10 @@ public class RoundRactImageView extends ImageView{
             mRadius = 10;
             return;
         }
-
+        if(attrs == null){
+            mRadius = 10;
+            return;
+        }
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RoundRectImageView);
         mRadius = array.getDimensionPixelSize(R.styleable.RoundRectImageView_imageRadius, 10);
         mType = array.getInt(R.styleable.RoundRectImageView_roundType, TYPE_ALL);
@@ -63,13 +74,7 @@ public class RoundRactImageView extends ImageView{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mRoundRect.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(), getHeight() - getPaddingBottom());
-        setUpdateShader();
-    }
-
-    @Override
-    public void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
-        setUpdateShader();
+        setUpdateShader(true);
     }
 
     @Override
@@ -78,12 +83,20 @@ public class RoundRactImageView extends ImageView{
             return;
         }
 
+        setUpdateShader(false);
+
         switch (mType){
             case TYPE_ALL:
                 drawAll(canvas);
                 break;
             case TYPE_LEFT:
                 drawLeft(canvas);
+                break;
+            case TYPE_TOP:
+                drawTop(canvas);
+                break;
+            case TYPE_CIRCLE:
+                drawCircle(canvas);
                 break;
         }
     }
@@ -111,7 +124,7 @@ public class RoundRactImageView extends ImageView{
         //顺时针画
         path.moveTo(mRoundRect.left + mRadius, mRoundRect.top);//左上开始
         path.lineTo(mRoundRect.right - mRadius, mRoundRect.top);//移动到右上
-        path.arcTo(createRectF(mRoundRect.right - mRadius, mRoundRect.top, mRadius * 2, mRadius * 2), -90, 90);//右上圆角
+        path.arcTo(createRectF(mRoundRect.right - 2 * mRadius, mRoundRect.top, mRadius * 2, mRadius * 2), -90, 90);//右上圆角
         path.lineTo(mRoundRect.right, mRoundRect.bottom);//移动到右下
         path.lineTo(mRoundRect.left, mRoundRect.bottom);//移动到左下
         path.lineTo(mRoundRect.left, mRoundRect.top + mRadius);//移动到左上
@@ -120,11 +133,28 @@ public class RoundRactImageView extends ImageView{
         canvas.drawPath(path, mBitmapPaint);
     }
 
-    private void setUpdateShader(){
+    /**
+     * 画圆
+     * @param canvas
+     */
+    private void drawCircle(Canvas canvas) {
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - getPaddingLeft(), mBitmapPaint);
+    }
+
+    private void setUpdateShader(boolean resize){
+        if(mBitmapPaint == null){
+            return;
+        }
         Drawable drawable = getDrawable();
         if(drawable == null){
             return;
         }
+
+        if(!resize && curDrawable == drawable){//如果控件大小变化了强制更新
+            return;
+        }
+
+        curDrawable = drawable;
         int width = getWidth() - getPaddingLeft() - getPaddingRight();
         int height = getHeight() - getPaddingTop() - getPaddingBottom();
         Bitmap bm = drawableToBitamp(drawable);

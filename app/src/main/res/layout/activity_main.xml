@@ -7,16 +7,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/base_backgour"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        android:layout_width="wrap_content"
-        android:text="showimage"
-        android:onClick="showimage"
-        android:layout_height="wrap_content" />
 
         <Button
             android:layout_width="wrap_content"
@@ -75,7 +72,26 @@
         <Button
             android:layout_width="wrap_content"
             android:text="自动布局"
+            android:background="@android:drawable/btn_default"
             android:onClick="wrapLayout"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:onClick="blur"
+            android:text="blur"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:onClick="night"
+            android:text="night"
+            android:layout_height="wrap_content" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:textOff="off"
+            android:textOn="on"
             android:layout_height="wrap_content" />
 
         <TextView

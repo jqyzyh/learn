@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="base_background">#f00</item>
+    </style>
+
+    <style name="AppTheme.Night">
+        <item name="base_background">#000</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

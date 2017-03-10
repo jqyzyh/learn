@@ -8,6 +8,7 @@
             <enum name="rigth" value="3" />
             <enum name="top" value="4" />
             <enum name="bottom" value="5" />
+            <enum name="circle" value="6"/>
         </attr>
     </declare-styleable>
 

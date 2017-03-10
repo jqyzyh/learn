@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_blur"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jqyzyh.learn.BlurActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:text="的李开复坚实的浪费就死定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了定了附件收到了费劲是的历史地看放暑假了思考说了就算了" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="1234" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="blur"
+        android:text="blur" />
+
+
+</LinearLayout>

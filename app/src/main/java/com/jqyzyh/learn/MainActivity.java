@@ -1,9 +1,20 @@
 package com.jqyzyh.learn;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Application;
+import android.app.UiModeManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,8 +35,14 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 import jqyzyh.iee.cusomwidget.iospupopmenu.IOSPupopMenu;
+import jqyzyh.iee.cusomwidget.utils.LogUtils;
 
 public class MainActivity extends AppCompatActivity {
+
+    static boolean isnight;
+
+    private String a = "aaa";
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         return super.dispatchKeyEvent(event);
@@ -34,73 +51,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        new MyHandler(this);
-        List<Method> methods = getMethods(WebViewClient.class);
-//        for(Method m : methods){
-//            Log.d("mylog", "=========================>" + m.getName());
-//            String params = "";
-//            Class<?>[] clss = m.getParameterTypes();
-//            if(clss == null || clss.length == 0){
-//
-//                Log.d("mylog", "params==>null");
-//            }else{
-//
-//                for(Class cls : clss){
-//                    params += cls.getName() + ",";
-//                }
-//
-//
-//                Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
-//            }
+        LogUtils.d("mylog", "onCreate==>" + a);
+//        if(isnight){
+//            Configuration config = getResources().getConfiguration();
+//            config.uiMode = Configuration.UI_MODE_NIGHT_YES;
+//            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+////            setTheme(R.style.AppTheme_Night);
 //        }
-
-        Log.d("mylog", "=========================>WebViewClientClassicExt=========================>");
-        try {
-            Class cls = Class.forName("android.webkit.WebViewClientClassicExt");
-            methods = getMethods(cls);
-            for (Method m : methods) {
-                Log.d("mylog", "=========================>" + m.getName());
-                String params = "";
-                Class<?>[] clss = m.getParameterTypes();
-                if (clss == null || clss.length == 0) {
-
-                    Log.d("mylog", "params==>null");
-                } else {
-
-                    for (Class c : clss) {
-                        params += c.getName() + ",";
-                    }
-
-
-                    Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Log.d("mylog", "=========================>WebChromeClient=========================>");
-
-        methods = getMethods(WebChromeClient.class);
-        for (Method m : methods) {
-            Log.d("mylog", "=========================>" + m.getName());
-            String params = "";
-            Class<?>[] clss = m.getParameterTypes();
-            if (clss == null || clss.length == 0) {
-
-                Log.d("mylog", "params==>null");
-            } else {
-
-                for (Class cls : clss) {
-                    params += cls.getName() + ",";
-                }
-
-
-                Log.d("mylog", "params==>" + params.substring(0, params.length() - 1));
-            }
-        }
-
-
+        setContentView(R.layout.activity_main);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
 
@@ -259,5 +218,43 @@ public class MainActivity extends AppCompatActivity {
 
     public void wrapLayout(View view){
         startActivity(new Intent(this, WrapLayoutActivity.class));
+    }
+
+    public void blur(View view){
+        startActivity(new Intent(this, BlurActivity.class));
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void night(View view){
+        LogUtils.d("mylog", "111");
+        isnight = true;
+
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        MyApp.static_instance.setTheme(R.style.AppTheme_Night);
+//        setTheme(R.style.AppTheme_Night);
+//        recreate();
+//        if(UiModeManager.MODE_NIGHT_YES == modeManager.getCurrentModeType()){
+//            modeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+//        }else{
+//            modeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+//        }
+        Configuration config = getResources().getConfiguration();
+        config.uiMode ^= Configuration.UI_MODE_NIGHT_YES;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+//        createConfigurationContext(config);
+        a = "bbb";
+        recreate();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        LogUtils.d("mylog", "onSaveInstanceState");
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LogUtils.d("mylog", "onConfigurationChanged");
     }
 }

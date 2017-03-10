@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.jqyzyh.learn"
-        minSdkVersion 9
-        targetSdkVersion 23
+        minSdkVersion 14
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -25,12 +25,11 @@ dependencies {
     compile project(':schedulemanager')
     compile project(':camera')
     compile project(':commen')
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:25+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:recyclerview-v7:25+'
+    compile 'com.android.support:design:25+'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:24.2.0'
     compile project(':jqyzyhrecyclerview')
 }
