@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jqyzyh.iee.cusomwidget.R;
+
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 
 /**
  * Created by jqyzyh on 2016/8/4.
@@ -111,9 +116,22 @@ public class IOSPupopMenu {
             }
         });
 
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            layoutParams.systemUiVisibility = lp.systemUiVisibility;
+        }
+
+        if((lp.flags & FLAG_TRANSLUCENT_STATUS) == FLAG_TRANSLUCENT_STATUS){
+            layoutParams.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            layoutParams.flags |= FLAG_TRANSLUCENT_STATUS;
+        }
+        if((lp.flags & FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) == FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS){
+            layoutParams.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            layoutParams.flags |= FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+        }
         layoutParams.format = PixelFormat.RGBA_8888;
         activity.getWindowManager().addView(mRootView, layoutParams);
 

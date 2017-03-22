@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         if (cls.getSuperclass() != null) {
             ret.addAll(getMethods(cls.getSuperclass()));
         }
+        int n = Build.VERSION_CODES.N;
         return ret;
 
     }
@@ -109,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
 //        new AlertDialog.Builder(this).setTitle("test").setMessage("登录是家乐福四级联考积分可").create().show();
 //
-        startActivity(new Intent(this, ListAnimHeaderActivity.class));
+//        startActivity(new Intent(this, ListAnimHeaderActivity.class));
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=com.enorth.ifore"));
+        startActivity(intent);
+
 //        IOSPupopMenu menu = new IOSPupopMenu(this);
 //        menu.addMenu("啊啊啊", Color.BLUE, null);
 //        menu.addMenu("啊啊啊", Color.BLUE, null);

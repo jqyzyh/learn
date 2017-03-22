@@ -395,7 +395,8 @@ public class ImageHandler implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if(!checkEnable()){
+
+        if(!checkEnable() && event.getAction() != MotionEvent.ACTION_CANCEL && event.getAction() != MotionEvent.ACTION_UP){
             return false;
         }
 
