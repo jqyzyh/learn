@@ -24,9 +24,10 @@ public abstract class LunBoAdapter extends PagerAdapter implements ViewPager.OnP
             this.viewPager.removeOnPageChangeListener(this);
         }
         this.viewPager = viewPager;
-        if(viewPager != null){
-            viewPager.addOnPageChangeListener(this);
+        if(viewPager == null){
+            return;
         }
+        viewPager.addOnPageChangeListener(this);
         this.viewPager.setAdapter(this);
         if(getCount() > 0){
             this.viewPager.setCurrentItem(1, false);
