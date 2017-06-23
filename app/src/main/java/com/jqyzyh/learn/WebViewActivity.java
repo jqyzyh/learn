@@ -87,7 +87,8 @@ public class WebViewActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         wv.getSettings().setJavaScriptEnabled(true);
 //        wv.loadUrl("http://bbs.qyzxtest.com.cn/member.php?mod=logging&action=login&app=1&username=aaa&password=oo1234");
-        wv.loadUrl("http://www.jindinghui.com.cn/topic/161117xydzp_wap1/?pagetype=share&nat=1&fontsize=m&sub=0");
+//        wv.loadUrl("http://www.jindinghui.com.cn/topic/161117xydzp_wap1/?pagetype=share&nat=1&fontsize=m&sub=0");
+        wv.loadUrl("file:///android_asset/test.html");
         wv.setWebChromeClient(new MyWebChromeClient());
         wv.setWebViewClient(new MyWebViewClient());
     }
