@@ -7,6 +7,8 @@ import android.app.UiModeManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -35,6 +37,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
+import jqyzyh.iee.cusomwidget.drawerlayout.QQDrawerLayout;
 import jqyzyh.iee.cusomwidget.iospupopmenu.IOSPupopMenu;
 import jqyzyh.iee.cusomwidget.utils.LogUtils;
 
@@ -61,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
 //        }
         setContentView(R.layout.activity_main);
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo("com.yidian.lastmile", 0);
+            Log.e("mylog", "versionCode:" + packageInfo.versionCode + ",versionName:" + packageInfo.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -105,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void playvideo(View v){
         startActivity(new Intent(this, PlayVideoActivity.class));
+    }
+
+    public void qqdrawer(View v){
+        startActivity(new Intent(this, QQDrawerLayoutActivity.class));
     }
 
     public void test(View v) {

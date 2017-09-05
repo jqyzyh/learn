@@ -50,6 +50,9 @@
             android:name=".PlayVideoActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".QQDrawerLayoutActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".FullWindowVideoActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />

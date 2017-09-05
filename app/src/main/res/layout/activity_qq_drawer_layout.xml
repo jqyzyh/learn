@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="QQDrawerLayoutActivity"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <jqyzyh.iee.cusomwidget.drawerlayout.QQDrawerLayout
+        android:id="@+id/drawer"
+        xmlns:drawer="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="150dp"
+            android:background="#f00"
+            android:text="红色"
+            android:gravity="center"
+            android:tag="红色"
+            android:textSize="30sp"
+            android:textColor="#000"
+            drawer:DrawerType="left"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:background="#ff0"
+            android:text="黄色"
+            android:gravity="center"
+            android:tag="黄色"
+            android:textSize="30sp"
+            android:textColor="#000"
+            drawer:DrawerType="right"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#00f"
+            android:text="蓝色"
+            android:gravity="center"
+            android:tag="蓝色"
+            android:textSize="30sp"
+            android:textColor="#000"
+            drawer:DrawerType="content"
+            android:layout_height="match_parent" />
+
+    </jqyzyh.iee.cusomwidget.drawerlayout.QQDrawerLayout>
+</LinearLayout>
