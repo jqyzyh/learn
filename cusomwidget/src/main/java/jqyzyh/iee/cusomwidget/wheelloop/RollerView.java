@@ -88,7 +88,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         int measureHeght = MeasureSpec.getSize(heightMeasureSpec);
 
         if (heightMode == MeasureSpec.AT_MOST) {
-            measureHeght = mTextHeight * 6;
+            measureHeght = mTextHeight * 8;
         }
 
         setMeasuredDimension(measureWidth, measureHeght);
@@ -111,14 +111,16 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
      * @param inPaperY 绘制未在在平面中的位置
      * @param paint    画笔
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     void drawText(Canvas canvas, String text, float inPaperY, Paint paint, float offsetZ) {
         inPaperY += mPaperOffsetY;
         float angle = 90 - (inPaperY * 180 / mPaperHeight);
-        if (angle > 85 || angle < -85) {
+        if (angle >= 90 || angle <= -90) {
             return;
         }
 
         Camera camera = new Camera();
+        camera.setLocation(0, 0, -20);
         //下面三行代码可以实现滚轮的效果，需要发挥一些想象力
         camera.translate(0, 0, mCameraTranslateZ - offsetZ);
         camera.rotateX(angle);
@@ -131,6 +133,17 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         canvas.drawText(text, getWidth() / 2, getHeight() / 2 + mTextHeight / 2, paint);
         canvas.restoreToCount(saveCamera);
         canvas.restoreToCount(saveTranslate);
+    }
+
+    void selectRoller(RollerItem item){
+        if (mRoller == item) {
+            return;
+        }
+        mRoller = item;
+
+        if (mItemSelectorListener != null) {
+            mItemSelectorListener.onItemSelect(this, mRoller);
+        }
     }
 
     boolean scrollPaper(float dy) {
@@ -176,12 +189,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         }
 
         mPaperOffsetY = offsetY;
-        if (result != mRoller) {
-            if (mItemSelectorListener != null) {
-                mItemSelectorListener.onItemSelect(this, result);
-            }
-        }
-        mRoller = result;
+        selectRoller(result);
         invalidate();
         return isEnd;
     }
@@ -234,6 +242,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         if (mRoller == null) {
             return;
         }
+        canvas.drawARGB(0x44, 0xff, 0, 0);
 
         float centerHeight = mTextHeight * 1.5F;
         float lineY = getHeight() / 2 - centerHeight / 2;
@@ -331,7 +340,6 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
     public void setItemSelectorListener(OnItemSelectorListener itemSelectorListener) {
         this.mItemSelectorListener = itemSelectorListener;
     }
-
 
     /**
      * 修改字号
