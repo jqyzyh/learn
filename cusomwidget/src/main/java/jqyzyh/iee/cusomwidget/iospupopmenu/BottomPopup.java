@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -24,7 +26,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACK
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 
 /**
- * Created by yuhang on 2016/8/19.
+ * @author yuhang on 2016/8/19.
  */
 public class BottomPopup {
     public interface OnDismissPopupListener{
@@ -101,7 +103,8 @@ public class BottomPopup {
         view.setVisibility(View.INVISIBLE);
 
         final Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0);
-        animation.setDuration(300);
+        animation.setDuration(250);
+        animation.setInterpolator(new DecelerateInterpolator());
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -167,7 +170,8 @@ public class BottomPopup {
             }
             isDismissing = true;
             Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-            animation.setDuration(300);
+            animation.setDuration(250);
+            animation.setInterpolator(new AccelerateInterpolator());
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
