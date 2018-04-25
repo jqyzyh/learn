@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true">
+    <item  android:width="4dp" android:height="4dp">
+        <shape android:dither="false">
+            <size android:width="4dp" android:height="4dp"/>
+            <corners android:radius="20dp" />
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item  android:width="4dp" android:height="4dp" android:start="5dp" android:end="8dp">
+        <shape android:dither="false">
+            <size android:width="4dp" android:height="4dp"/>
+            <corners android:radius="20dp" />
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item  android:width="4dp" android:height="4dp" android:start="10dp" android:end="12dp" android:gravity="right">
+        <shape android:dither="false">
+            <size android:width="4dp" android:height="4dp"/>
+            <corners android:radius="20dp" />
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+</layer-list>

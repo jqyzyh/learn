@@ -5,18 +5,33 @@
 <script type="text/javascript">
 function clear1()
 {
- if(confirm("确定要清空数据吗？"))
- {
- document.main.text1.value="";
- }
+ var element = document.getElementById('video');
+ if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+ <!--if(confirm("确定要清空数据吗？"))-->
+ <!--{-->
+ <!--var a = 0xd83d;-->
+ <!--var b = 0xDE03;-->
+ <!--var str = String.fromCharCode(parseInt("0xd83d"), 0xDE03)-->
+    <!--str += String.fromCharCode(123)-->
+
+    <!--"adfasf".replaceAll('[emoji:12345678]', str);-->
+ <!--document.main.text1.value=str;-->
+ <!--}-->
 }
 </script>
 </head>
-<boty>
+<body>
 <form name="main">
 <input type="text" name="text1"/>
 <input type="button" name="submit" value="数据清空" onclick="return clear1()"/>
 </form>
+    表情表情\ud83d\ude03\ud83d\ude0a
+
+<video id="video" controls="" autoplay="" name="media"><source src="http://10.0.251.109:7070/pub/appcloud_jin/androidweb/www/tsw/app/video/test/herman.mp4" type="video/mp4"></video>
 </body>
 </html>
 <html>

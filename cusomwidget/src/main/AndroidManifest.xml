@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="jqyzyh.iee.cusomwidget">
 
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application android:allowBackup="false"
         android:supportsRtl="true">
 

@@ -22,4 +22,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <!-- activity 下入动画style -->
+    <style name="BottomToTopAnim" parent="@android:style/Animation">
+
+    </style>
 </resources>

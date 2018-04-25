@@ -32,4 +32,5 @@ dependencies {
     compile 'com.android.support:design:25+'
     testCompile 'junit:junit:4.12'
     compile project(':jqyzyhrecyclerview')
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
 }

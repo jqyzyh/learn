@@ -8,13 +8,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/base_backgour"
+    android:id="@+id/lilay_content"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <ImageView
+            android:layout_width="50dp"
+            android:src="@drawable/icon_diandiandian"
+            android:layout_height="50dp" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,6 +96,11 @@
             android:layout_width="wrap_content"
             android:onClick="qqdrawer"
             android:text="qqdrawer"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="wrap_content"
+            android:onClick="testlogin"
+            android:text="testlogin"
             android:layout_height="wrap_content" />
 
         <Switch

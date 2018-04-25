@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PersistableBundle;
@@ -26,9 +27,13 @@ import android.webkit.WebViewClient;
 import android.widget.GridView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,12 @@ import javax.net.ssl.SSLSession;
 import jqyzyh.iee.cusomwidget.drawerlayout.QQDrawerLayout;
 import jqyzyh.iee.cusomwidget.iospupopmenu.IOSPupopMenu;
 import jqyzyh.iee.cusomwidget.utils.LogUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        String aaaa = "\\\" askfjaslj \\\"   \n \n";
+        Log.e("mylog", "1=>" + aaaa);
+        Log.e("mylog", "2=>" + aaaa.replaceAll("\\\\", "\\\\"));
+        Log.e("mylog", "3=>" + aaaa.replaceAll("\\\\", "\\\\\\\\"));
 
+        Log.e("mylog", getResources().getDrawable(R.drawable.icon_diandiandian).getClass().getName());
     }
 
 
@@ -96,7 +112,97 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, ImageActivity.class));
     }
 
+    static class A<T> {
+        static List<String> a;
+        static Class<String> b;
+    }
+    static class B extends A<Boolean> {
+        static List<String> a;
+        static Class<String> b;
+    }
+
     public void schedule(View v) {
+        if (true){
+//            startActivity(new Intent(this, NestedScrollingActivity.class));
+
+            try {
+                Field field =A.class.getDeclaredField("b");
+                LogUtils.e("mylog", "field 1" + field.getType().getName());
+                if(field.getGenericType() instanceof ParameterizedType){
+                    ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                    //得到泛型里的class类型对象
+                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
+                    LogUtils.e("mylog", "field 2" + genericClazz.getName());
+                }
+
+
+                if(B.class.getGenericSuperclass() instanceof ParameterizedType){
+                    ParameterizedType pt = (ParameterizedType) B.class.getGenericSuperclass();
+                    //得到泛型里的class类型对象
+                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
+                    LogUtils.e("mylog", "field 3" + genericClazz.getName());
+                }
+
+//                LogUtils.e("mylog", "responseClass 1" + A.a.getClass().getName());
+//                LogUtils.e("mylog", "responseClass 2" + A.a.getClass().getComponentType().getName());
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+//        OkHttpClient client = new OkHttpClient();
+//        Request.Builder builder = new Request.Builder();
+//        FormBody.Builder fb = new FormBody.Builder();
+//        fb.add("catType", "1");
+//        fb.add("goodsShowNum", "3");
+//        client.newCall(builder.url("http://fenli.51soucai.cn/home/goods/goodsShowList").post(fb.build()).build()).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                Log.d("mylog", "okhttp response ====>" + response.body().string());
+//            }
+//        });
+////        new Thread(new Runnable() {
+////            @Override
+////            public void run() {
+////                try {
+////                    URL url = new URL("http://fenli.51soucai.cn/home/goods/goodsShowList?catType=1&goodsShowNum=3");
+////                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+////                    conn.setConnectTimeout(5000);
+////                    conn.setDoOutput(true);// 允许输出
+////                    conn.setDoInput(true);
+////                    conn.setUseCaches(false);// 不使用缓存
+////                    conn.setRequestMethod("POST");
+////                    conn.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
+////                    conn.setRequestProperty("Charset", "UTF-8");
+//////                    conn.setRequestProperty("Content-Length",
+//////                            String.valueOf(xmlbyte.length));
+////                    conn.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+////
+////                    int code = conn.getResponseCode();
+////                    Log.d("mylog", "response code ====>" + code);
+////                    InputStream is = conn.getInputStream();
+////                    byte[] buffer = new byte[4 * 1024];
+////                    int len;
+////                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+////                    while ((len = is.read(buffer)) != -1) {
+////                        os.write(buffer, 0, len);
+////                        os.flush();
+////                    }
+////                    final String string = new String(os.toByteArray());
+////                    Log.d("mylog", "response ====>" + string);
+////                } catch (Exception e) {
+////                    e.printStackTrace();
+////                }
+////            }
+////        }).start();
+//        if (true){
+//            return;
+//        }
         startActivity(new Intent(this, ScheduleActivity.class));
     }
 
@@ -267,7 +373,13 @@ public class MainActivity extends AppCompatActivity {
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 //        createConfigurationContext(config);
         a = "bbb";
+
         recreate();
+    }
+
+
+    public void testlogin(View v){
+        getSupportFragmentManager().beginTransaction().addToBackStack("addLogin").setCustomAnimations(R.anim.slide_bottom_in, R.anim.slide_bottom_in, R.anim.slide_bottom_in, R.anim.slide_bottom_out).add(android.R.id.content, new LoginFragment(), "login").commitAllowingStateLoss();
     }
 
     @Override

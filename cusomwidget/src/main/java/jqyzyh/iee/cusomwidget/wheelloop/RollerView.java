@@ -18,7 +18,8 @@ import static android.view.MotionEvent.ACTION_MOVE;
 import static android.view.MotionEvent.ACTION_UP;
 
 /**
- * @author yuhang
+ * 一个仿照ios滚轮控件
+ * @author jqyzyh
  */
 
 public class RollerView extends View implements GestureDetector.OnGestureListener {
