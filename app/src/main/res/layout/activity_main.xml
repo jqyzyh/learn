@@ -103,6 +103,12 @@
             android:text="testlogin"
             android:layout_height="wrap_content" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Indicator"
+            android:onClick="testIndicator"
+            android:layout_height="wrap_content" />
+
         <Switch
             android:layout_width="wrap_content"
             android:textOff="off"

@@ -66,6 +66,7 @@
         <activity android:name=".WrapLayoutActivity" />
         <activity android:name=".BlurActivity" />
         <activity android:name=".NestedScrollingActivity"></activity>
+        <activity android:name=".PageIndicatorActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

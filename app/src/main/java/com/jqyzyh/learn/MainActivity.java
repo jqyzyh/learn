@@ -382,6 +382,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().addToBackStack("addLogin").setCustomAnimations(R.anim.slide_bottom_in, R.anim.slide_bottom_in, R.anim.slide_bottom_in, R.anim.slide_bottom_out).add(android.R.id.content, new LoginFragment(), "login").commitAllowingStateLoss();
     }
 
+    public void testIndicator(View v){
+        startActivity(new Intent(this, PageIndicatorActivity.class));
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);

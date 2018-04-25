@@ -30,4 +30,19 @@
             <enum name="right" value="2" />
         </attr>
     </declare-styleable>
+    
+    <declare-styleable name="ColorIndicator">
+        <attr name="IndicatorColor" format="color"/>
+        <attr name="NormalColor" format="color"/>
+        <attr name="TextSize" format="dimension"/>
+        <attr name="TabSpace" format="dimension"/>
+        <attr name="IndicatorTypeface" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+        <attr name="NormalTypeface" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>
