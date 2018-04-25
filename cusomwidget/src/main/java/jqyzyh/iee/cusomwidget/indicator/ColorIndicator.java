@@ -149,6 +149,14 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         setupTabs();
     }
 
+    public void setAdapter(PagerAdapter adapter){
+        if (mViewPager != null) {
+            mViewPager.setAdapter(adapter);
+            setupTabs();
+            setCurrentItem(0);
+        }
+    }
+
     /**
      * 设置选中项
      *
@@ -156,6 +164,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
      */
     public void setCurrentItem(int position) {
         mViewPager.setCurrentItem(position);
+        selectItem(position);
     }
 
     public void setTextSize(float textSize) {
