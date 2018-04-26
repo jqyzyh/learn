@@ -11,11 +11,12 @@
         android:layout_marginTop="36dp"
         android:layout_width="match_parent"
         android:background="#eee"
-        app:TextSize="20dp"
         app:NormalColor="#0f0"
         app:IndicatorColor="#f00"
         app:NormalTypeface="normal"
         app:IndicatorTypeface="bold"
+        app:IndicatorTextSize="18dp"
+        app:NormalTextSize="14dp"
         android:layout_height="40dp" />
 
     <android.support.v4.view.ViewPager

@@ -23,7 +23,8 @@ import jqyzyh.iee.cusomwidget.R;
 
 /**
  * @author yuhang
- * @attr ret R.styleable#ColorIndicator_TextSize
+ * @attr ret R.styleable#ColorIndicator_IndicatorTextSize
+ * @attr ret R.styleable#ColorIndicator_NormalTextSize
  * @attr ret R.styleable#ColorIndicator_NormalColor
  * @attr ret R.styleable#ColorIndicator_IndicatorColor
  * @attr ret R.styleable#ColorIndicator_NormalTypeface
@@ -48,16 +49,21 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
     private ViewPager mViewPager;
 
-    private Paint mContentPaint;
+    private Paint mNormalPaint;
     private Paint mIndicatorPaint;
+
+    private int mNormalColor;
+    private int mIndicatorColor;
 
     private List<TabItem> itemList = new ArrayList<>();
 
     private int mAllWidth = 0;//全部文字宽度
     private int mTextHeight = 0;//文字的高度
+    private int mIndicatorTextHeight = 0;//选中文字的高度
     private int mTabSpace = 20;//文字间距
 
     private int mSelectedPosition;//当前选中项
+    private int mIndicatorPosition;//选中项位置
     private float mIndicatorOffset;//当前选中项便宜
 
     private float mOffsetX;
@@ -92,30 +98,28 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             return;
         }
         mInited = true;
-        mContentPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        mNormalPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         mIndicatorPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-
+        mNormalPaint.setTextAlign(Paint.Align.CENTER);
+        mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
         if (attrs == null) {
-            mContentPaint.setColor(0xff333333);
-            mIndicatorPaint.setColor(0xff0000ff);
-            mContentPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
+            mNormalColor = 0xff333333;
+            mIndicatorColor = 0xff0000ff;
+            mNormalPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
             mIndicatorPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
             mTabSpace = (int) (10 * getResources().getDisplayMetrics().density);
         } else {
             TypedArray ary = context.obtainStyledAttributes(attrs, R.styleable.ColorIndicator);
-
-            float textSize = ary.getDimension(R.styleable.ColorIndicator_TextSize, 16 * getResources().getDisplayMetrics().density);
-
-            mContentPaint.setColor(ary.getColor(R.styleable.ColorIndicator_NormalColor, 0xff333333));
-            mContentPaint.setTextSize(textSize);
-            mIndicatorPaint.setColor(ary.getColor(R.styleable.ColorIndicator_IndicatorColor, 0xff0000ff));
-            mIndicatorPaint.setTextSize(textSize);
+            mNormalColor = ary.getColor(R.styleable.ColorIndicator_NormalColor, 0xff333333);
+            mIndicatorColor = ary.getColor(R.styleable.ColorIndicator_IndicatorColor, 0xff0000ff);
+            mNormalPaint.setTextSize(ary.getDimension(R.styleable.ColorIndicator_NormalTextSize, 16));
+            mIndicatorPaint.setTextSize(ary.getDimension(R.styleable.ColorIndicator_IndicatorTextSize, 16));
             switch (ary.getInt(R.styleable.ColorIndicator_NormalTypeface, 0)) {
                 case 1:
-                    mContentPaint.setTypeface(Typeface.DEFAULT_BOLD);
+                    mNormalPaint.setTypeface(Typeface.DEFAULT_BOLD);
                     break;
                 default:
-                    mContentPaint.setTypeface(Typeface.DEFAULT);
+                    mNormalPaint.setTypeface(Typeface.DEFAULT);
                     break;
             }
             switch (ary.getInt(R.styleable.ColorIndicator_IndicatorTypeface, 0)) {
@@ -132,8 +136,10 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
 
         Rect rect = new Rect();
-        mContentPaint.getTextBounds("国口", 0, 2, rect);
+        mNormalPaint.getTextBounds("国口", 0, 2, rect);
         mTextHeight = rect.height();
+        mIndicatorPaint.getTextBounds("国口", 0, 2, rect);
+        mIndicatorTextHeight = rect.height();
     }
 
     public void attachViewPager(ViewPager viewPager) {
@@ -149,7 +155,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         setupTabs();
     }
 
-    public void setAdapter(PagerAdapter adapter){
+    public void setAdapter(PagerAdapter adapter) {
         if (mViewPager != null) {
             mViewPager.setAdapter(adapter);
             setupTabs();
@@ -167,33 +173,79 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         selectItem(position);
     }
 
+    /**
+     * 设置文字字号
+     *
+     * @param textSize
+     */
     public void setTextSize(float textSize) {
-        mContentPaint.setTextSize(textSize);
-        mIndicatorPaint.setTextSize(textSize);
+        mNormalPaint.setTextSize(textSize);
+        Rect rect = new Rect();
+        mNormalPaint.getTextBounds("国口", 0, 2, rect);
+        mTextHeight = rect.height();
         measureTabs();
         invalidate();
     }
 
-    public void setNormalColor(int color) {
-        mContentPaint.setColor(color);
+    /**
+     * 设置选中文字字号
+     *
+     * @param textSize
+     */
+    public void setIndicatorTextSize(float textSize) {
+        mIndicatorPaint.setTextSize(textSize);
+        Rect rect = new Rect();
+        mIndicatorPaint.getTextBounds("国口", 0, 2, rect);
+        mIndicatorTextHeight = rect.height();
+        measureTabs();
         invalidate();
     }
 
-    public void setIndicator(int color) {
-        mIndicatorPaint.setTextSize(color);
+    /**
+     * 设置tab文字颜色
+     *
+     * @param color
+     */
+    public void setTabColor(int color) {
+        mNormalColor = color;
         invalidate();
     }
 
+    /**
+     * 设置选中颜色
+     *
+     * @param color
+     */
+    public void setIndicatorColor(int color) {
+        mIndicatorColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设置边距
+     *
+     * @param tabSpace
+     */
     public void setTabSpace(int tabSpace) {
         this.mTabSpace = tabSpace;
         invalidate();
     }
 
-    public void setNormalTypeface(Typeface typeface) {
-        mContentPaint.setTypeface(typeface);
+    /**
+     * 设置字体
+     *
+     * @param typeface
+     */
+    public void setTypeface(Typeface typeface) {
+        mNormalPaint.setTypeface(typeface);
         invalidate();
     }
 
+    /**
+     * 设置选中字体
+     *
+     * @param typeface
+     */
     public void setIndicator(Typeface typeface) {
         mIndicatorPaint.setTypeface(typeface);
         invalidate();
@@ -204,7 +256,10 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         mIndicatorOffset = 0;
     }
 
-    private void setupTabs() {
+    /**
+     * 重置整个tab栏
+     */
+    public void setupTabs() {
         itemList.clear();
         if (mViewPager == null) {
             invalidate();
@@ -225,7 +280,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         mAllWidth = 0;
         Rect rect = new Rect();
         for (TabItem item : itemList) {
-            mContentPaint.getTextBounds(item.text, 0, item.text.length(), rect);
+            mNormalPaint.getTextBounds(item.text, 0, item.text.length(), rect);
             item.width = rect.width();
             mAllWidth += item.width + mTabSpace + mTabSpace;
         }
@@ -236,73 +291,97 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
         int width = getWidth();//绘制区域宽度
         int height = getHeight();//绘制区域高度
-        int textY = (height + mTextHeight) / 2;//文本绘制的y坐标
         int len = itemList.size();//导航个数
 
-        Rect clipRect = new Rect(0, 0, 0, height);//选中区域
+        int startIndex = -1;//可视区域起始索引
+        int endIndex = 0;//可视区域结束索引
+        int clipLeft = 0;
+        int clipRight = 0;
 
-        //绘制所有tab
-        float x = -mOffsetX;//当前绘制的位置
+        Rect clipRect = new Rect(0, 0, 0, height);//绘制区域
+
+        //计算一下
+        int x = (int) -mOffsetX;//当前绘制的位置
+        int end = 0;
         for (int i = 0; i < len; i++) {
             TabItem item = itemList.get(i);
-
             if (x > width) {//如果当前绘制位置在屏幕外右边则不在绘制
                 break;
             }
-
-            int end = (int) (x + mTabSpace + mTabSpace + item.width);
-
+            end = x + mTabSpace + mTabSpace + item.width;
             if (end < 0) {//如果当前绘制位置在屏幕外左边则直接绘制下一个
                 x = end;
                 continue;
             }
+            if(startIndex == -1){
+                startIndex = i;
+            }
+            endIndex = i;
 
-            if (i == mSelectedPosition) {//当前选中的项
+            if (i == mIndicatorPosition) {//当前选中的项
                 if (mIndicatorOffset > 0) {//正在滑动
-                    clipRect.left = (int) (x + mIndicatorOffset * (item.width + mTabSpace + mTabSpace));
+                    clipLeft = (int) (x + mIndicatorOffset * (item.width + mTabSpace + mTabSpace));
                 } else {
-                    clipRect.left = (int) x;
-                    clipRect.right = end;
+                    clipLeft = x;
+                    clipRight = end;
                 }
-            } else if (i == mSelectedPosition + 1) {//当前选中的项的下一项
+            } else if (i == mIndicatorPosition + 1) {//当前选中的项的下一项
                 if (mIndicatorOffset > 0) {//正在滑动
-                    clipRect.right = (int) (x + mIndicatorOffset * (item.width + mTabSpace + mTabSpace));
+                    clipRight = (int) (x + mIndicatorOffset * (item.width + mTabSpace + mTabSpace));
                 } else {
-                    clipRect.right = (int) x;
+                    clipRight = x;
                 }
             }
-
-            canvas.drawText(item.text, x + mTabSpace, textY, mContentPaint);
             x = end;
         }
+        endIndex += 1;
 
-        if (clipRect.width() <= 0) {
-            return;
-        }
-
-        //绘制选中的tab
-        int saveCount = canvas.save();
-        canvas.clipRect(clipRect);//锁定绘制区域为选中的tab
-        x = -mOffsetX;
-        for (int i = 0; i < len; i++) {
+        x = (int) -mOffsetX;//当前绘制的位置
+        end = 0;
+        for (int i = 0; i < endIndex; i++) {
             TabItem item = itemList.get(i);
+            end = x + mTabSpace + mTabSpace + item.width;
 
-            if (x > width) {//如果当前绘制位置在屏幕外右边则不在绘制
-                break;
-            }
-
-            float end = x + mTabSpace + mTabSpace + item.width;
-
-            if (end < 0) {//如果当前绘制位置在屏幕外左边则直接绘制下一个
+            if (i < startIndex){
                 x = end;
                 continue;
             }
 
-            canvas.drawText(item.text, x + mTabSpace, textY, mIndicatorPaint);
+            Paint paint = i == mSelectedPosition ? mIndicatorPaint : mNormalPaint;
+            int textHeight =  i == mSelectedPosition ? mIndicatorTextHeight : mTextHeight;
+            int textY = (height + textHeight) / 2;
+
+            if(x <= clipLeft){
+                clipRect.left = 0;
+                clipRect.right = clipLeft;
+                int saveCount = canvas.save();
+                canvas.clipRect(clipRect);
+                paint.setColor(mNormalColor);
+                canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
+                canvas.restoreToCount(saveCount);
+            }
+
+            if(end >= clipRight){
+                clipRect.left = clipRight;
+                clipRect.right = width;
+                int saveCount = canvas.save();
+                canvas.clipRect(clipRect);
+                paint.setColor(mNormalColor);
+                canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
+                canvas.restoreToCount(saveCount);
+            }
+
+            if (x <= clipRight || end >= clipLeft){
+                clipRect.left = clipLeft;
+                clipRect.right = clipRight;
+                int saveCount = canvas.save();
+                canvas.clipRect(clipRect);
+                paint.setColor(mIndicatorColor);
+                canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
+                canvas.restoreToCount(saveCount);
+            }
             x = end;
         }
-
-        canvas.restoreToCount(saveCount);
     }
 
     /**
@@ -315,6 +394,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             return;
         }
         mSelectedPosition = position;
+        mIndicatorPosition = position;
         mIndicatorOffset = 0;
         offsetIndicatorToMid(position);
     }
@@ -404,7 +484,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             return;
         }
 
-        mSelectedPosition = position;
+        mIndicatorPosition = position;
         mIndicatorOffset = positionOffset;
 
         invalidate();
@@ -415,7 +495,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         if (mViewPager == null) {
             return;
         }
-
+        mSelectedPosition = position;
         offsetIndicatorToMid(position);
     }
 
