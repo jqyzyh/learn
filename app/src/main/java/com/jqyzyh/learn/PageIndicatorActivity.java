@@ -18,23 +18,31 @@ import jqyzyh.iee.cusomwidget.indicator.ColorIndicator;
  */
 
 public class PageIndicatorActivity extends FragmentActivity {
+
+    int size = 0;
+    MyAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page_indicator);
 
         ViewPager vp = (ViewPager) findViewById(R.id.viewpager);
-        vp.setAdapter(new MyAdapter());
+        vp.setAdapter(adapter = new MyAdapter());
 
         ColorIndicator indicator = (ColorIndicator) findViewById(R.id.indicator);
         indicator.attachViewPager(vp);
+    }
+
+    public void add(View v){
+        size += 2;
+        adapter.notifyDataSetChanged();
     }
 
     class MyAdapter extends PagerAdapter{
 
         @Override
         public int getCount() {
-            return 20;
+            return size;
         }
 
         @Override

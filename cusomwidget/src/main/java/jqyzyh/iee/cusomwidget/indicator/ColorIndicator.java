@@ -3,6 +3,7 @@ package jqyzyh.iee.cusomwidget.indicator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -35,7 +36,6 @@ import jqyzyh.iee.cusomwidget.R;
 public class ColorIndicator extends View implements ViewPager.OnPageChangeListener, GestureDetector.OnGestureListener {
     static final String LOG_TAG = "ColorIndicator";
 
-
     static class TabItem {
         String text;
         int width;
@@ -45,9 +45,26 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         }
     }
 
+    private class PagerAdapterObserver extends DataSetObserver {
+        PagerAdapterObserver() {
+        }
+
+        @Override
+        public void onChanged() {
+            setupTabs();
+        }
+
+        @Override
+        public void onInvalidated() {
+            setupTabs();
+        }
+    }
+
     private boolean mInited = false;
 
     private ViewPager mViewPager;
+    private PagerAdapter mAdapter;
+    private DataSetObserver mDataSetObserver;
 
     private Paint mNormalPaint;
     private Paint mIndicatorPaint;
@@ -152,15 +169,25 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             return;
         }
         viewPager.addOnPageChangeListener(this);
-        setupTabs();
+        setPagerAdapter(viewPager.getAdapter(), true);
     }
 
-    public void setAdapter(PagerAdapter adapter) {
-        if (mViewPager != null) {
-            mViewPager.setAdapter(adapter);
-            setupTabs();
-            setCurrentItem(0);
+    void setPagerAdapter(PagerAdapter adapter, boolean autRefresh) {
+        if (mAdapter != null && mDataSetObserver != null) {
+            mAdapter.unregisterDataSetObserver(mDataSetObserver);
         }
+        mAdapter = adapter;
+
+        if (autRefresh && adapter != null){
+
+        }
+        if (adapter != null) {
+            if (mDataSetObserver == null) {
+                mDataSetObserver = new PagerAdapterObserver();
+            }
+            adapter.registerDataSetObserver(mDataSetObserver);
+        }
+        setupTabs();
     }
 
     /**
@@ -273,6 +300,10 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             itemList.add(new TabItem(title));
         }
         measureTabs();
+        if (mViewPager != null) {
+            mSelectedPosition = mViewPager.getCurrentItem();
+            selectItem(mSelectedPosition);
+        }
         invalidate();
     }
 
@@ -288,10 +319,12 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
     @Override
     protected void onDraw(Canvas canvas) {
-
+        int len = itemList.size();//导航个数
+        if (len == 0) {
+            return;
+        }
         int width = getWidth();//绘制区域宽度
         int height = getHeight();//绘制区域高度
-        int len = itemList.size();//导航个数
 
         int startIndex = -1;//可视区域起始索引
         int endIndex = 0;//可视区域结束索引

@@ -5,7 +5,11 @@
     tools:context=".PageIndicatorActivity"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <Button
+        android:layout_width="wrap_content"
+        android:onClick="add"
+        android:text="add"
+        android:layout_height="wrap_content" />
     <jqyzyh.iee.cusomwidget.indicator.ColorIndicator
         android:id="@+id/indicator"
         android:layout_marginTop="36dp"
