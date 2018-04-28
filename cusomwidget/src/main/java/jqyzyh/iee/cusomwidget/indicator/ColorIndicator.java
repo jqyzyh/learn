@@ -280,7 +280,9 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
     private void resetIndicator() {
         mSelectedPosition = 0;
+        mIndicatorPosition = 0;
         mIndicatorOffset = 0;
+        mOffsetX = 0;
     }
 
     /**
@@ -314,6 +316,14 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             mNormalPaint.getTextBounds(item.text, 0, item.text.length(), rect);
             item.width = rect.width();
             mAllWidth += item.width + mTabSpace + mTabSpace;
+        }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w != oldw){
+            offsetIndicatorToMid(mSelectedPosition);
         }
     }
 
