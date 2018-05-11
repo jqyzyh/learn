@@ -25,6 +25,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         Log.e("mylog", "3=>" + aaaa.replaceAll("\\\\", "\\\\\\\\"));
 
         Log.e("mylog", getResources().getDrawable(R.drawable.icon_diandiandian).getClass().getName());
+        TextView tv = (TextView) findViewById(R.id.tv_test);
+        tv.setText(String.format("%02d:%02d:%02d", 100, 0, 1));
     }
 
 

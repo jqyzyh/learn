@@ -3,11 +3,13 @@ package jqyzyh.iee.cusomwidget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.database.DataSetObserver;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import static android.view.Gravity.HORIZONTAL_GRAVITY_MASK;
  * @author jqyzyh
  */
 
-public class WrapLayout extends ViewGroup {
+public class WordWrapLayout extends ViewGroup {
     private int mHorizontalSpacing;
     private int mVerticalSpacing;
     private int mGravity = Gravity.LEFT;
@@ -29,24 +31,32 @@ public class WrapLayout extends ViewGroup {
 
     private List<ChildLayout> childLayouts = new ArrayList<>();
 
-    public WrapLayout(Context context) {
-        super(context);
-        init(context, null);
+    private BaseAdapter mAdapter;
+
+    private DataSetObserver dataSetObserver = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            updateLayout();
+        }
+    };
+
+    public WordWrapLayout(Context context) {
+        this(context, null);
 
     }
 
-    public WrapLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+    public WordWrapLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public WrapLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WordWrapLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public WrapLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public WordWrapLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
@@ -56,12 +66,12 @@ public class WrapLayout extends ViewGroup {
             return;
         }
         inited = true;
-        if(attrs != null){
+        if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(
-                    attrs, R.styleable.WrapLayout);
-            mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.WrapLayout_horizontalSpacing, 0);
-            mVerticalSpacing = a.getDimensionPixelSize(R.styleable.WrapLayout_verticalSpacing, 0);
-            mGravity = a.getInt(R.styleable.WrapLayout_gravity, Gravity.LEFT);
+                    attrs, R.styleable.WrodWrapLayout);
+            mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.WrodWrapLayout_horizontalSpacing, 0);
+            mVerticalSpacing = a.getDimensionPixelSize(R.styleable.WrodWrapLayout_verticalSpacing, 0);
+            mGravity = a.getInt(R.styleable.WrodWrapLayout_gravity, Gravity.LEFT);
             a.recycle();
         }
     }
@@ -111,20 +121,66 @@ public class WrapLayout extends ViewGroup {
         int measuredWidth;
         int measuredHeight;
 
-        if(MeasureSpec.AT_MOST == heightMode){
+        if (MeasureSpec.AT_MOST == heightMode) {
             measuredWidth = Math.min(realWidth, width) + getPaddingLeft() + getPaddingRight();
         } else {
             measuredWidth = width + getPaddingLeft() + getPaddingRight();
         }
 
-        if(MeasureSpec.EXACTLY == heightMode){
+        if (MeasureSpec.EXACTLY == heightMode) {
             measuredHeight = height + getPaddingTop() + getPaddingBottom();
-        }else{
+        } else {
             measuredHeight = Math.max(childLayouts.get(childLayouts.size() - 1).pointY + curHeight, height) + getPaddingTop() + getPaddingBottom();
         }
 
         setMeasuredDimension(measuredWidth, measuredHeight);
 
+    }
+
+    public void setAdapter(BaseAdapter adapter) {
+        if (mAdapter != null) {
+            mAdapter.unregisterDataSetObserver(dataSetObserver);
+        }
+        this.mAdapter = adapter;
+        if (adapter != null) {
+            adapter.registerDataSetObserver(dataSetObserver);
+        }
+        updateLayout();
+    }
+
+    void updateLayout() {
+        if (mAdapter == null) {
+            removeAllViews();
+            requestLayout();
+            invalidate();
+            return;
+        }
+        int len = getChildCount();
+        int count = mAdapter.getCount();
+        List<View> views = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            views.add(getChildAt(i));
+        }
+
+        for (int i = 0; i < len || i < count; i++) {
+            View v = i < len ? views.get(i) : null;
+            if (i < count) {
+                View cv = mAdapter.getView(i, v, this);
+                if (v != cv) {
+                    removeView(v);
+                    super.addView(cv, i, cv.getLayoutParams() == null ? new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT) : cv.getLayoutParams());
+                }
+            } else {
+                removeView(v);
+            }
+        }
+        requestLayout();
+        invalidate();
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        throw new RuntimeException("不能addView");
     }
 
     @Override

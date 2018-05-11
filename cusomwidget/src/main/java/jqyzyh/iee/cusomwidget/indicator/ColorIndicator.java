@@ -41,7 +41,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         int width;
 
         public TabItem(String text) {
-            this.text = text;
+            this.text = text == null ? "" : text;
         }
     }
 
