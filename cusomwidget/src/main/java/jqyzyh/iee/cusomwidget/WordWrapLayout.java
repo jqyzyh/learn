@@ -68,10 +68,10 @@ public class WordWrapLayout extends ViewGroup {
         inited = true;
         if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(
-                    attrs, R.styleable.WrodWrapLayout);
-            mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.WrodWrapLayout_horizontalSpacing, 0);
-            mVerticalSpacing = a.getDimensionPixelSize(R.styleable.WrodWrapLayout_verticalSpacing, 0);
-            mGravity = a.getInt(R.styleable.WrodWrapLayout_gravity, Gravity.LEFT);
+                    attrs, R.styleable.WordWrapLayout);
+            mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.WordWrapLayout_horizontalSpacing, 0);
+            mVerticalSpacing = a.getDimensionPixelSize(R.styleable.WordWrapLayout_verticalSpacing, 0);
+            mGravity = a.getInt(R.styleable.WordWrapLayout_gravity, Gravity.LEFT);
             a.recycle();
         }
     }
