@@ -45,5 +45,8 @@
             <enum name="normal" value="0" />
             <enum name="bold" value="1" />
         </attr>
+        <attr name="TextAnim" format="boolean"/>
+        <attr name="BottomLine" format="boolean"/>
+        <attr name="LineAnim" format="boolean"/>
     </declare-styleable>
 </resources>

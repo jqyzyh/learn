@@ -24,7 +24,7 @@ import jqyzyh.iee.cusomwidget.utils.LogUtils;
 
 public class PageIndicatorActivity extends FragmentActivity {
 
-    int size = 20;
+    int size = 4;
     PagerAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +72,11 @@ public class PageIndicatorActivity extends FragmentActivity {
         @Override
         public int getCount() {
             return size;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "title" + position;
         }
     }
 

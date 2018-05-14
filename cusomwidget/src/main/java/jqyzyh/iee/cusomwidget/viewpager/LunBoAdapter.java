@@ -34,7 +34,7 @@ public abstract class LunBoAdapter extends PagerAdapter implements ViewPager.OnP
         }
     }
 
-    protected abstract int getRealCount();
+    public abstract int getRealCount();
 
     public int getRealPosition(int postion){
         if(postion == 0){//第一项是最后一项
@@ -45,10 +45,10 @@ public abstract class LunBoAdapter extends PagerAdapter implements ViewPager.OnP
         return postion - 1;//第二项才是数据的开始
     }
 
-    protected abstract Object getRealItem(int postion);
+    protected abstract Object getRealItem(int position);
 
-    public Object getItem(int postion){
-        return getRealItem(getRealPosition(postion));
+    public Object getItem(int position){
+        return getRealItem(getRealPosition(position));
     }
 
     @Override

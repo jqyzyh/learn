@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jqyzyh.iee.cusomwidget.R;
+import jqyzyh.iee.cusomwidget.utils.LogUtils;
 
 /**
  * @author yuhang
@@ -78,10 +79,15 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
     private int mTextHeight = 0;//文字的高度
     private int mIndicatorTextHeight = 0;//选中文字的高度
     private int mTabSpace = 20;//文字间距
+    private int mLineWidth = 4;//线的粗度
 
     private int mSelectedPosition;//当前选中项
     private int mIndicatorPosition;//选中项位置
     private float mIndicatorOffset;//当前选中项便宜
+
+    private boolean mShowLine;//是否显示线
+    private boolean mTextAnim;//文字是否有动画
+    private boolean mLineAnim;//线是否有动画
 
     private float mOffsetX;
 
@@ -119,12 +125,16 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         mIndicatorPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         mNormalPaint.setTextAlign(Paint.Align.CENTER);
         mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
+        mLineWidth = (int) (getResources().getDisplayMetrics().density * 3);
         if (attrs == null) {
             mNormalColor = 0xff333333;
             mIndicatorColor = 0xff0000ff;
             mNormalPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
             mIndicatorPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
             mTabSpace = (int) (10 * getResources().getDisplayMetrics().density);
+            mShowLine = false;
+            mTextAnim = false;
+            mLineAnim = false;
         } else {
             TypedArray ary = context.obtainStyledAttributes(attrs, R.styleable.ColorIndicator);
             mNormalColor = ary.getColor(R.styleable.ColorIndicator_NormalColor, 0xff333333);
@@ -148,6 +158,9 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
                     break;
             }
             mTabSpace = ary.getDimensionPixelSize(R.styleable.ColorIndicator_TabSpace, (int) (10 * getResources().getDisplayMetrics().density));
+            mShowLine = ary.getBoolean(R.styleable.ColorIndicator_BottomLine, false);
+            mTextAnim = ary.getBoolean(R.styleable.ColorIndicator_TextAnim, false);
+            mLineAnim = mShowLine && ary.getBoolean(R.styleable.ColorIndicator_LineAnim, false);
             ary.recycle();
         }
 
@@ -178,7 +191,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         }
         mAdapter = adapter;
 
-        if (autRefresh && adapter != null){
+        if (autRefresh && adapter != null) {
 
         }
         if (adapter != null) {
@@ -322,7 +335,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (w != oldw){
+        if (w != oldw) {
             offsetIndicatorToMid(mSelectedPosition);
         }
     }
@@ -343,6 +356,10 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
 
         Rect clipRect = new Rect(0, 0, 0, height);//绘制区域
 
+        int textPosition = mTextAnim ? mIndicatorPosition : mSelectedPosition;
+        float textOffset = mTextAnim ? mIndicatorOffset : 0;
+
+
         //计算一下
         int x = (int) -mOffsetX;//当前绘制的位置
         int end = 0;
@@ -356,7 +373,7 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
                 x = end;
                 continue;
             }
-            if(startIndex == -1){
+            if (startIndex == -1) {
                 startIndex = i;
             }
             endIndex = i;
@@ -385,47 +402,73 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
             TabItem item = itemList.get(i);
             end = x + mTabSpace + mTabSpace + item.width;
 
-            if (i < startIndex){
+            if (i < startIndex) {
                 x = end;
                 continue;
             }
 
             Paint paint = i == mSelectedPosition ? mIndicatorPaint : mNormalPaint;
-            int textHeight =  i == mSelectedPosition ? mIndicatorTextHeight : mTextHeight;
+            int textHeight = i == mSelectedPosition ? mIndicatorTextHeight : mTextHeight;
             int textY = (height + textHeight) / 2;
 
-            if(x <= clipLeft){
-                clipRect.left = 0;
-                clipRect.right = clipLeft;
-                int saveCount = canvas.save();
-                canvas.clipRect(clipRect);
-                paint.setColor(mNormalColor);
-                canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
-                canvas.restoreToCount(saveCount);
-            }
-
-            if(end >= clipRight){
-                clipRect.left = clipRight;
-                clipRect.right = width;
-                int saveCount = canvas.save();
-                canvas.clipRect(clipRect);
-                paint.setColor(mNormalColor);
-                canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
-                canvas.restoreToCount(saveCount);
-            }
-
-            if (x <= clipRight || end >= clipLeft){
+            if (mTextAnim) {
                 clipRect.left = clipLeft;
                 clipRect.right = clipRight;
-                int saveCount = canvas.save();
-                canvas.clipRect(clipRect);
-                paint.setColor(mIndicatorColor);
+                drawTextAnim(canvas, item.text, clipRect, clipLeft, clipRight, x, end, textY, paint);
+            }else {
+                paint.setColor(mSelectedPosition == i ? mIndicatorColor : mNormalColor);
                 canvas.drawText(item.text, x + (end - x) / 2, textY, paint);
-                canvas.restoreToCount(saveCount);
             }
+
+            //画线
+            if (mShowLine && mSelectedPosition == i) {
+                if (mLineAnim) {
+                    paint.setColor(mIndicatorColor);
+                    canvas.drawRect(new Rect(clipLeft + mTabSpace, height - mLineWidth, clipRight - mTabSpace, height), paint);
+                }else{
+                    paint.setColor(mIndicatorColor);
+                    canvas.drawRect(new Rect(x + mTabSpace, height - mLineWidth, end - mTabSpace, height), paint);
+                }
+            }
+
             x = end;
         }
     }
+
+    private void drawTextAnim(Canvas canvas, String text, Rect clipRect, int clipLeft, int clipRight, int start, int end, int y, Paint paint) {
+        LogUtils.e("mylog", text + "  " + clipRect + "   " + start + "  " + end + "  " + y);
+        if(start <= clipLeft){
+            clipRect.left = 0;
+            clipRect.right = clipLeft;
+            int saveCount = canvas.save();
+            canvas.clipRect(clipRect);
+            paint.setColor(mNormalColor);
+            canvas.drawText(text, start + (end - start) / 2, y, paint);
+            canvas.restoreToCount(saveCount);
+        }
+
+        if(end >= clipRight){
+            clipRect.left = clipRight;
+            clipRect.right = getWidth();
+            int saveCount = canvas.save();
+            canvas.clipRect(clipRect);
+            paint.setColor(mNormalColor);
+            canvas.drawText(text, start + (end - start) / 2, y, paint);
+            canvas.restoreToCount(saveCount);
+        }
+
+        if (start <= clipRight || end >= clipLeft){
+            clipRect.left = clipLeft;
+            clipRect.right = clipRight;
+            int saveCount = canvas.save();
+            canvas.clipRect(clipRect);
+            paint.setColor(mIndicatorColor);
+            canvas.drawText(text, start + (end - start) / 2, y, paint);
+            canvas.restoreToCount(saveCount);
+        }
+    }
+
+
 
     /**
      * 设置当前选中项
@@ -530,7 +573,9 @@ public class ColorIndicator extends View implements ViewPager.OnPageChangeListen
         mIndicatorPosition = position;
         mIndicatorOffset = positionOffset;
 
-        invalidate();
+        if (mTextAnim || mLineAnim) {
+            invalidate();
+        }
     }
 
     @Override

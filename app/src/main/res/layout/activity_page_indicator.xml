@@ -20,6 +20,9 @@
         app:NormalTypeface="normal"
         app:IndicatorTypeface="bold"
         app:IndicatorTextSize="18dp"
+        app:TextAnim="false"
+        app:BottomLine="true"
+        app:LineAnim="true"
         app:NormalTextSize="14dp"
         android:layout_height="40dp" />
 
