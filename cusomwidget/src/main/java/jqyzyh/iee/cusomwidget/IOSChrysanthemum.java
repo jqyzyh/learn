@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -17,7 +16,10 @@ import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 /**
  * 一个仿ios loading框的动画
  *
- * @author yuhang on 4/24/2019
+ * {@link R.styleable#IOSChrysanthemum_chrysanthemumColor}菊花的颜色<br/>
+ * {@link R.styleable#IOSChrysanthemum_chrysanthemumPetalCount}菊花的瓣数<br/>
+ * {@link R.styleable#IOSChrysanthemum_chrysanthemumInterval}菊花动一下的时间间隔<br/>
+ * @author jqyzyh on 4/24/2019
  */
 public class IOSChrysanthemum extends View {
     Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
@@ -31,6 +33,11 @@ public class IOSChrysanthemum extends View {
 
     boolean inited;
     int chrysanthemumColor = 0x666666;
+
+    int petalCount = 12;//有几个花瓣
+    int angle = 30;//花瓣之间角度
+
+    int interval = 70;
 
     public IOSChrysanthemum(Context context) {
         super(context);
@@ -59,12 +66,24 @@ public class IOSChrysanthemum extends View {
         }
         inited = true;
 
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStyle(Paint.Style.STROKE);
+
         if (attrs == null) {
             return;
         }
 
         TypedArray ary = context.obtainStyledAttributes(attrs, R.styleable.IOSChrysanthemum);
         chrysanthemumColor = ary.getColor(R.styleable.IOSChrysanthemum_chrysanthemumColor, chrysanthemumColor) & 0x00ffffff;
+        petalCount = Math.min(12, Math.max(8, ary.getInt(R.styleable.IOSChrysanthemum_chrysanthemumPetalCount, petalCount)));
+        interval = Math.max(10, ary.getInt(R.styleable.IOSChrysanthemum_chrysanthemumInterval, interval));
+
+        while (360 % petalCount != 0) {
+            petalCount--;
+        }
+
+        angle = 360 / petalCount;
+
         ary.recycle();
     }
 
@@ -135,7 +154,8 @@ public class IOSChrysanthemum extends View {
         int minRadius = (int) (radius * 0.4);
         drawRect.set(w / 2 - radius, h / 2 - radius, w / 2 + radius, h / 2 + radius);
         petalsHeight = radius - minRadius - 1;
-        petalsWidth = (int) (minRadius * Math.PI * 2 / 12) - 1;//内圈周长
+        petalsWidth = (int) (minRadius * Math.PI * 2 / 12);//内圈周长
+        paint.setStrokeWidth(petalsWidth);
     }
 
     @Override
@@ -146,12 +166,11 @@ public class IOSChrysanthemum extends View {
         canvas.translate(drawRect.left, drawRect.top);
 
         canvas.rotate(startRotate, radius, radius);
-        RectF rect = new RectF(radius - petalsWidth / 2, 0, radius + petalsWidth / 2, petalsHeight);
-        for (int i = 0; i < 12; i++) {
-            canvas.rotate(30, radius, radius);
+        for (int i = 0; i < petalCount; i++) {
+            canvas.rotate(angle, radius, radius);
             int a = 0x30 + 0xcf * i / 12;
             paint.setColor(chrysanthemumColor | (a << 24));
-            canvas.drawRoundRect(rect, petalsWidth, petalsWidth, paint);
+            canvas.drawLine(radius, petalsWidth / 2, radius, petalsHeight - petalsWidth / 2, paint);
         }
 
         canvas.restoreToCount(saveCount);
@@ -160,7 +179,7 @@ public class IOSChrysanthemum extends View {
             startTime = System.currentTimeMillis();
         }
 
-        startRotate = 30 * (int) (((System.currentTimeMillis() - startTime) / 70) % 12);
+        startRotate = angle * (int) (((System.currentTimeMillis() - startTime) / interval) % petalCount);
         postInvalidateDelayed(16);
     }
 }

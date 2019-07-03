@@ -52,5 +52,7 @@
 
     <declare-styleable name="IOSChrysanthemum">
         <attr name="chrysanthemumColor" format="color"/>
+        <attr name="chrysanthemumPetalCount" format="integer"/>
+        <attr name="chrysanthemumInterval" format="integer"/>
     </declare-styleable>
 </resources>
