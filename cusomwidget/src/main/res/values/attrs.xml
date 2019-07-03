@@ -49,4 +49,8 @@
         <attr name="BottomLine" format="boolean"/>
         <attr name="LineAnim" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="IOSChrysanthemum">
+        <attr name="chrysanthemumColor" format="color"/>
+    </declare-styleable>
 </resources>
