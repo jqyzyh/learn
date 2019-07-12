@@ -5,30 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="50dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.jqyzyh.learn.WheelViewActivity">
-
 
 
     <jqyzyh.iee.cusomwidget.wheelloop.RollerView
         android:id="@+id/rv2"
-        android:layout_centerHorizontal="true"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"/>
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
     <jqyzyh.iee.cusomwidget.wheelloop.RollerView
         android:id="@+id/rv1"
-        android:layout_toLeftOf="@id/rv2"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/rv2" />
 
     <jqyzyh.iee.cusomwidget.wheelloop.RollerView
         android:id="@+id/rv3"
-        android:layout_width="30dp"
-        android:layout_toRightOf="@id/rv2"
-        android:layout_height="wrap_content" />
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rv2" />
 
     <!--<jqyzyh.iee.cusomwidget.wheelloop.LoopView-->
     <!--android:id="@+id/test"-->
@@ -51,12 +51,28 @@
     <!--android:layout_height="30dp"/>-->
 
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:onClick="click"
-        android:text="点我" />
+        android:layout_below="@id/rv1"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector
+            android:id="@+id/rs_1"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+
+        <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector
+            android:id="@+id/rs_2"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content" />
+
+        <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector
+            android:id="@+id/rs_3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <!--<RelativeLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:background="#fff"-->

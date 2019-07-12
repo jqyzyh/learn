@@ -8,10 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_MOVE;
@@ -19,6 +21,7 @@ import static android.view.MotionEvent.ACTION_UP;
 
 /**
  * 一个仿照ios滚轮控件
+ *
  * @author jqyzyh
  */
 
@@ -32,7 +35,8 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
     private int mTextHeight;//文字高度
 
     private int mPaperHeight;//平面的高度
-    private float mCameraTranslateZ;//摄像机Z轴便宜 mTextHeight * 3
+    private float initZ;//摄像机Z初始位置
+    private float mCameraTranslateZ;//摄像机Z轴偏移 mTextHeight * 3
 
     private float mPaperOffsetY;//滚动的高度
 
@@ -44,7 +48,12 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
 
     private float mLastTouchY;
 
+    private float maxFlingSpeed;//惯性最大速度
+    private float minFlingSpeed;//惯性最小速度 减速到这次速度一下 就停止并校准位置
+    private float autoFlingSpeed;//自动滚动的速度
+
     private OnItemSelectorListener mItemSelectorListener;
+    private Paint.FontMetrics mFontMetrics;//计算字体绘制区域
 
     public RollerView(Context context) {
         super(context);
@@ -72,6 +81,12 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
             return;
         }
 
+        //惯性速度
+        maxFlingSpeed = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 400, context.getResources().getDisplayMetrics());
+        minFlingSpeed = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 25, context.getResources().getDisplayMetrics());
+        autoFlingSpeed = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
+
+        initZ = -TypedValue.applyDimension(COMPLEX_UNIT_DIP, 7, context.getResources().getDisplayMetrics());
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(0xff333333);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
@@ -89,19 +104,35 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         int measureHeght = MeasureSpec.getSize(heightMeasureSpec);
 
         if (heightMode == MeasureSpec.AT_MOST) {
-            measureHeght = mTextHeight * 8;
+            measureHeght = mTextHeight * 7;
         }
 
         setMeasuredDimension(measureWidth, measureHeght);
     }
 
     void measureText() {
+        mFontMetrics = mTextPaint.getFontMetrics();
         Rect rect = new Rect();
         mTextPaint.getTextBounds("方块", 0, 2, rect);
         mTextHeight = rect.height();
 
         mPaperHeight = mTextHeight * 9;
         mCameraTranslateZ = mTextHeight * 4F;
+    }
+
+    float getTextBaseLine(float y) {
+        return getTextBaseLine(y, mFontMetrics);
+    }
+
+    public static float getTextBaseLine(float y, Paint.FontMetrics fm) {
+        if (fm == null) {
+            return y;
+        }
+        return y + (fm.bottom - fm.top) / 2 - fm.bottom;
+    }
+
+    void drawText(Canvas canvas, String text, float inPaperY, Paint paint) {
+        drawText(canvas, text, inPaperY, paint, 1);
     }
 
     /**
@@ -113,7 +144,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
      * @param paint    画笔
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    void drawText(Canvas canvas, String text, float inPaperY, Paint paint, float offsetZ) {
+    void drawText(Canvas canvas, String text, float inPaperY, Paint paint, float scale) {
         inPaperY += mPaperOffsetY;
         float angle = 90 - (inPaperY * 180 / mPaperHeight);
         if (angle >= 90 || angle <= -90) {
@@ -121,22 +152,26 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         }
 
         Camera camera = new Camera();
-        camera.setLocation(0, 0, -20);
+        camera.setLocation(0, 0, initZ);
         //下面三行代码可以实现滚轮的效果，需要发挥一些想象力
-        camera.translate(0, 0, mCameraTranslateZ - offsetZ);
+        camera.translate(0, 0, mCameraTranslateZ);
         camera.rotateX(angle);
         camera.translate(0, 0, -mCameraTranslateZ);
         int saveTranslate = canvas.save();
         canvas.translate(mWindowCenterX, getHeight() / 2);
         int saveCamera = canvas.save();
         camera.applyToCanvas(canvas);
-        canvas.translate(-mWindowCenterX, -getHeight() / 2);
-        canvas.drawText(text, getWidth() / 2, getHeight() / 2 + mTextHeight / 2, paint);
+        canvas.translate(-mWindowCenterX + getWidth() / 2, 0);
+        if (scale != 1) {
+            canvas.scale(scale, scale);
+        }
+        canvas.drawText(text, 0, getTextBaseLine(0), paint);
+
         canvas.restoreToCount(saveCamera);
         canvas.restoreToCount(saveTranslate);
     }
 
-    void selectRoller(RollerItem item){
+    void selectRoller(RollerItem item) {
         if (mRoller == item) {
             return;
         }
@@ -195,25 +230,32 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         return isEnd;
     }
 
+    /**
+     * 惯性滚动
+     * @param velocityY 初始速度
+     */
     protected final void flingPaper(float velocityY) {
         cancelFling();
         post(mFlingRunable = new FlingRunnable(velocityY));
     }
 
+    /**
+     * 自动校准
+     */
     protected final void autoCenter() {
         cancelFling();
         float vy = 0;
         if (mPaperOffsetY < 0) {
             if (mPaperOffsetY < -mTextHeight / 2) {
-                vy = -200;
+                vy = -autoFlingSpeed;
             } else {
-                vy = 200;
+                vy = autoFlingSpeed;
             }
         } else if (mPaperOffsetY > 0) {
             if (mPaperOffsetY > mTextHeight / 2) {
-                vy = 200;
+                vy = autoFlingSpeed;
             } else {
-                vy = -200;
+                vy = -autoFlingSpeed;
             }
         }
         if (vy != 0) {
@@ -243,17 +285,17 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         if (mRoller == null) {
             return;
         }
+        int saveCount;
         canvas.drawARGB(0x44, 0xff, 0, 0);
-
         float centerHeight = mTextHeight * 1.5F;
         float lineY = getHeight() / 2 - centerHeight / 2;
 
         mTextPaint.setColor(0xff999999);
         //画上边
-        int saveCount = canvas.save();
+        saveCount = canvas.save();
         canvas.clipRect(0, 0, getWidth(), lineY);
-        if (mPaperOffsetY < 0) {
-            drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint, 0);
+        if (mPaperOffsetY <= 0) {
+            drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint);
         }
         RollerItem temp;
         temp = mRoller;
@@ -262,7 +304,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
             if (temp == null) {
                 break;
             }
-            drawText(canvas, temp.getText(), mPaperHeight / 2 - (i + 1) * mTextHeight, mTextPaint, 0);
+            drawText(canvas, temp.getText(), mPaperHeight / 2 - (i + 1) * mTextHeight, mTextPaint);
         }
         canvas.restoreToCount(saveCount);
 
@@ -270,7 +312,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         saveCount = canvas.save();
         canvas.clipRect(0, lineY + centerHeight, getWidth(), getHeight());
         if (mPaperOffsetY > 0) {
-            drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint, 0);
+            drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint);
         }
         temp = mRoller;
         for (int i = 0; i < 4; i++) {
@@ -279,28 +321,28 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
                 break;
             }
 
-            drawText(canvas, temp.getText(), mPaperHeight / 2 + (i + 1) * mTextHeight, mTextPaint, 0);
+            drawText(canvas, temp.getText(), mPaperHeight / 2 + (i + 1) * mTextHeight, mTextPaint);
         }
         canvas.restoreToCount(saveCount);
 
-        mTextPaint.setColor(0xff333333);
         //画中间
+        mTextPaint.setColor(0xff333333);
         saveCount = canvas.save();
         canvas.clipRect(0, lineY, getWidth(), lineY + centerHeight);
         if (mPaperOffsetY < 0) {//向上滚动了 画下边的第一项
             temp = mRoller.next();
             if (temp != null) {
-                drawText(canvas, temp.getText(), mPaperHeight / 2 + mTextHeight, mTextPaint, mTextHeight * 0.5F);
+                drawText(canvas, temp.getText(), mPaperHeight / 2 + mTextHeight, mTextPaint, 1.1f);
             }
         } else if (mPaperOffsetY > 0) {//向下滚动了 画上边的第一项
             temp = mRoller.last();
             if (temp != null) {
-                drawText(canvas, temp.getText(), mPaperHeight / 2 - mTextHeight, mTextPaint, mTextHeight * 0.5F);
+                drawText(canvas, temp.getText(), mPaperHeight / 2 - mTextHeight, mTextPaint, 1.1f);
             }
         }
-        drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint, mTextHeight * 0.5F);
+        drawText(canvas, mRoller.getText(), mPaperHeight / 2, mTextPaint, 1.1f);
         canvas.restoreToCount(saveCount);
-
+//
         canvas.drawLine(0, lineY, getWidth(), lineY, mPaintIndicator);
         canvas.drawLine(0, lineY + centerHeight, getWidth(), lineY + centerHeight, mPaintIndicator);
     }
@@ -398,7 +440,7 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (Math.abs(velocityY) < 100) {
+        if (Math.abs(velocityY) < minFlingSpeed) {//初始速度太低没有惯性
             autoCenter();
         } else {
             flingPaper(velocityY);
@@ -421,7 +463,6 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
     }
 
     class FlingRunnable implements Runnable {
-
         float velocityY;
         long startTime;
         boolean autoFling;
@@ -429,9 +470,9 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         FlingRunnable(float velocityY, boolean autoFling) {
             this.startTime = System.currentTimeMillis();
             if (velocityY < 0) {
-                velocityY = Math.max(velocityY, -1000);
+                velocityY = Math.max(velocityY, -maxFlingSpeed);
             } else {
-                velocityY = Math.min(velocityY, 1000);
+                velocityY = Math.min(velocityY, maxFlingSpeed);
             }
             this.velocityY = velocityY;
             this.autoFling = autoFling;
@@ -445,21 +486,26 @@ public class RollerView extends View implements GestureDetector.OnGestureListene
         public void run() {
             long time = System.currentTimeMillis() - startTime;
             startTime = System.currentTimeMillis();
-            if (velocityY < -50) {
-                velocityY += time * 0.5f;
-                if (velocityY > -50) {
-                    velocityY = -50;
-                }
-            } else if (velocityY > 50) {
-                velocityY -= time * 0.5f;
-                if (velocityY < 50) {
-                    velocityY = 50;
+
+            if (!autoFling) {//自动滚动是不减速的
+                if (velocityY < 0) {
+                    velocityY += time * 0.5f;
+                    if (velocityY > -minFlingSpeed) {
+                        autoCenter();
+                        return;
+                    }
+                } else if (velocityY > 0) {
+                    velocityY -= time * 0.5f;
+                    if (velocityY < minFlingSpeed) {
+                        autoCenter();
+                        return;
+                    }
                 }
             }
 
             float dy = velocityY * time / 1000;
             if (!scrollPaper(dy)) {
-                if (Math.abs(velocityY) == 50 || autoFling) {
+                if (autoFling) {
                     if (Math.abs(dy) >= Math.abs(mPaperOffsetY)) {
                         mPaperOffsetY = 0;
                         velocityY = 0;

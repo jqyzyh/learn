@@ -7,17 +7,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,15 +26,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import jqyzyh.iee.cusomwidget.utils.LogUtils;
-import jqyzyh.iee.cusomwidget.wheelloop.LoopView;
+import jqyzyh.iee.cusomwidget.selector.CanSelectItem;
+import jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector;
 import jqyzyh.iee.cusomwidget.wheelloop.RollerView;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class WheelViewActivity extends AppCompatActivity {
     ArrayList<String> list;
 
+    int initZ = -10;
     SeekBar sbY, sbZ;
     TextView tvY, tvZ;
 
@@ -73,6 +73,36 @@ public class WheelViewActivity extends AppCompatActivity {
         }
     }
 
+    class IntItem implements CanSelectItem<Integer>{
+        int value;
+        String str;
+
+        public IntItem(int value, String str) {
+            this.value = value;
+            this.str = str;
+        }
+
+        @Override
+        public Integer getItem() {
+            return value;
+        }
+
+        @Override
+        public String getText() {
+            return value + str;
+        }
+
+        @Override
+        public CanSelectItem<Integer> last() {
+            return new IntItem(value - 1, str);
+        }
+
+        @Override
+        public CanSelectItem<Integer> next() {
+            return new IntItem(value + 1, str);
+        }
+    }
+
     class YearItem implements RollerView.RollerItem{
 
         int year;
@@ -88,7 +118,7 @@ public class WheelViewActivity extends AppCompatActivity {
 
         @Override
         public String getText() {
-            return String.valueOf(year);
+            return String.valueOf(year) + "年";
         }
 
         @Override
@@ -117,7 +147,7 @@ public class WheelViewActivity extends AppCompatActivity {
 
         @Override
         public String getText() {
-            return String.valueOf(month);
+            return String.valueOf(month) + "月";
         }
 
         @Override
@@ -146,7 +176,7 @@ public class WheelViewActivity extends AppCompatActivity {
 
         @Override
         public String getText() {
-            return String.valueOf(day);
+            return String.valueOf(day) + "日";
         }
 
         @Override
@@ -169,7 +199,7 @@ public class WheelViewActivity extends AppCompatActivity {
         sbZ = (SeekBar)findViewById(R.id.sb_z);
         tvY = (TextView) findViewById(R.id.tv_y);
         tvZ = (TextView) findViewById(R.id.tv_z);
-        sbY.setMax(10);
+        sbY.setMax(30);
         sbZ.setMax(1000);
 
 //        LoopView loopView = (LoopView) findViewById(R.id.test);
@@ -186,7 +216,7 @@ public class WheelViewActivity extends AppCompatActivity {
         rv3.setRollerItem(new DayItem(2));
 
         list = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat("日期 yyyy年MM月dd日");
+        SimpleDateFormat format = new SimpleDateFormat("日期 yyyy年MM月dd日 yyyy年MM月dd日");
         Calendar calendar = Calendar.getInstance();
         for (int i = 0; i < 20; i++) {
             list.add(format.format(calendar.getTime()));
@@ -239,7 +269,14 @@ public class WheelViewActivity extends AppCompatActivity {
         });
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.lilay_bottom);
-        linearLayout.addView(myview, new LinearLayout.LayoutParams(800, WRAP_CONTENT));
+        linearLayout.addView(myview, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+        RollingSelector rs1 = (RollingSelector) findViewById(R.id.rs_1);
+        RollingSelector rs2 = (RollingSelector) findViewById(R.id.rs_2);
+        RollingSelector rs3 = (RollingSelector) findViewById(R.id.rs_3);
+        rs1.setCanSelect(new IntItem(2019, "年"), null);
+        rs2.setCanSelect(new IntItem(7, "月"), null);
+        rs3.setCanSelect(new IntItem(12, "日"), null);
 //        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(800, 400);
 //        lp.topMargin = 450;
 //        relativeLayout.addView(new MyView2(this), lp);
@@ -331,7 +368,7 @@ public class WheelViewActivity extends AppCompatActivity {
         int zhouchang;
         double radius;
 
-        public int sby, sbz;
+        public int sby = 15, sbz;
 
         public void setSby(int sby) {
             this.sby = sby;
@@ -392,7 +429,7 @@ public class WheelViewActivity extends AppCompatActivity {
 
             float zz = paint.getTextSize() * 3.5f;
             Camera camera = new Camera();
-            camera.setLocation(0, 0, -12);
+            camera.setLocation(0, 0, -sby);
             camera.translate(0, 0, sbz);
             camera.rotateX(angle);
             camera.translate(0, 0, -sbz);
@@ -401,6 +438,7 @@ public class WheelViewActivity extends AppCompatActivity {
             canvas.translate(getWidth() / 2, getHeight() / 2);
             int count2 = canvas.save();
             camera.applyToCanvas(canvas);
+
             canvas.translate(-getWidth() / 2, -getHeight() / 2);
             canvas.drawText(txt, getWidth() / 2, getHeight() / 2 + textRect.height() / 2, paint);
             canvas.restoreToCount(count2);
