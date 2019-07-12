@@ -55,4 +55,15 @@
         <attr name="chrysanthemumPetalCount" format="integer"/>
         <attr name="chrysanthemumInterval" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="RollingSelector">
+        <attr name="rollerSkin" format="enum">
+            <enum name="ios" value="0"/>
+            <enum name="scale" value="1"/>
+        </attr>
+        <attr name="rollerTextColor" format="color"/>
+        <attr name="rollerTextSize" format="dimension"/>
+        <attr name="rollerLineSpace" format="dimension"/>
+        <attr name="rollerNum" format="integer"/>
+    </declare-styleable>
 </resources>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="50dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -61,11 +62,16 @@
         <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector
             android:id="@+id/rs_1"
             android:layout_width="150dp"
+            android:paddingTop="20dp"
+            app:rollerSkin="scale"
+            android:background="#80ff0000"
+            android:paddingBottom="20dp"
             android:layout_height="wrap_content" />
 
         <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector
             android:id="@+id/rs_2"
             android:layout_width="80dp"
+            app:rollerSkin="scale"
             android:layout_height="wrap_content" />
 
         <jqyzyh.iee.cusomwidget.selector.rolling.RollingSelector

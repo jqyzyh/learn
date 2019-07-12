@@ -2,8 +2,10 @@ package jqyzyh.iee.cusomwidget.selector.rolling;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -12,6 +14,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import jqyzyh.iee.cusomwidget.R;
 import jqyzyh.iee.cusomwidget.selector.CanSelectItem;
 
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
@@ -22,11 +25,15 @@ import static android.view.MotionEvent.ACTION_UP;
 
 /**
  * 滚动选择器
+ *
  * @author jqyzyh on 2019/7/12
  */
 public class RollingSelector extends View implements GestureDetector.OnGestureListener {
     public static final int STATE_NONE = 0;//静止状态
-    public static final int STATE_FLING = 1;//滚动状态
+    public static final int STATE_TOUCH = 1;//触摸状态
+    public static final int STATE_FLING = 2;//滚动状态
+
+    private int mState = STATE_NONE;
 
     private float maxFlingSpeed;//惯性最大速度
     private float minFlingSpeed;//惯性最小速度 减速到这次速度一下 就停止并校准位置
@@ -76,7 +83,17 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
         minFlingSpeed = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 25, context.getResources().getDisplayMetrics());
         autoFlingSpeed = TypedValue.applyDimension(COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
 
-        skin = new LikeIOSSkin(this);
+        if (attrs == null) {
+            skin = new LikeIOSSkin(this);
+        } else {
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RollingSelector);
+            int style = array.getInt(R.styleable.RollingSelector_rollerSkin, 0);
+            if (style == 1) {
+                skin = new MiddleBigSkin(this, array);
+            } else {
+                skin = new LikeIOSSkin(this);
+            }
+        }
         gestureDetector = new GestureDetector(context, this);
         mLineHeight = skin.getLineHeight();
     }
@@ -86,7 +103,7 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int height = skin.measureHeight(widthMeasureSpec, heightMeasureSpec);
         if (height > 0) {
-            setMeasuredDimension(getMeasuredWidth(), height);
+            setMeasuredDimension(getMeasuredWidth(), height + getPaddingTop() + getPaddingBottom());
         }
     }
 
@@ -99,7 +116,11 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
 
     @Override
     protected void onDraw(Canvas canvas) {
+        int saveCount = canvas.save();
+        canvas.clipRect(new Rect(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(), getHeight() - getPaddingBottom()));
+        canvas.translate(getPaddingLeft(), getPaddingTop());
         skin.draw(canvas, canSelectItem, mPaperOffsetY);
+        canvas.restoreToCount(saveCount);
     }
 
     public CanSelectItem getCurSelectItem() {
@@ -120,6 +141,16 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
 
         if (selectItemListener != null) {
             selectItemListener.onSelectItem(this, canSelectItem);
+        }
+    }
+
+    private void onChangeState(int state) {
+        if (mState == state) {
+            return;
+        }
+
+        if (selectItemListener != null) {
+            selectItemListener.onSelectChangeState(this, state);
         }
     }
 
@@ -230,6 +261,7 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
      */
     private final void flingPaper(float velocityY) {
         cancelFling();
+        onChangeState(STATE_FLING);
         post(mFlingRunnable = new FlingRunnable(velocityY));
     }
 
@@ -253,8 +285,11 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
             }
         }
         if (vy != 0) {
+            onChangeState(STATE_FLING);
             mFlingRunnable = new FlingRunnable(vy, true);
             post(mFlingRunnable);
+        } else {
+            onChangeState(STATE_NONE);
         }
     }
 
@@ -262,6 +297,7 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
     @Override
     public boolean onDown(MotionEvent e) {
         cancelFling();
+        onChangeState(STATE_TOUCH);
         return true;
     }
 
@@ -349,6 +385,7 @@ public class RollingSelector extends View implements GestureDetector.OnGestureLi
                     if (Math.abs(dy) >= Math.abs(mPaperOffsetY)) {
                         mPaperOffsetY = 0;
                         velocityY = 0;
+                        onChangeState(STATE_NONE);
                         return;
                     }
                 }
