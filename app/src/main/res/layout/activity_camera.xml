@@ -5,8 +5,21 @@
     android:layout_height="match_parent"
     tools:context="com.jqyzyh.learn.CameraActivity">
 
-    <SurfaceView
-        android:id="@+id/sf_camera"
+    <!--<SurfaceView-->
+        <!--android:id="@+id/sf_camera"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="照相"
+        android:id="@+id/btn_zhaoxiang"
+        android:onClick="zhaoxiang"
+        android:layout_height="wrap_content" />
+    <ImageView
         android:layout_width="match_parent"
+        android:layout_below="@id/btn_zhaoxiang"
+        android:id="@+id/iv_zhaopian"
         android:layout_height="match_parent" />
 </RelativeLayout>

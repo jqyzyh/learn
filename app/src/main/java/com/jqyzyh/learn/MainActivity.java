@@ -27,12 +27,23 @@ import android.webkit.WebViewClient;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -124,33 +135,97 @@ public class MainActivity extends AppCompatActivity {
         static Class<String> b;
     }
 
+    static class Bean1{
+        Long abc;
+
+        @Override
+        public String toString() {
+            String ret = "bean1=>";
+            if (abc == null) {
+                ret += "null!";
+            }else {
+                ret += abc;
+            }
+            return ret;
+        }
+    }
+
+    static class Bean2{
+        long abc;
+
+        @Override
+        public String toString() {
+            return "Bean2=>" + abc;
+        }
+    }
+
     public void schedule(View v) {
         if (true){
 //            startActivity(new Intent(this, NestedScrollingActivity.class));
 
+            GsonBuilder  builder = new GsonBuilder();
+            builder.registerTypeAdapter(Long.class, new JsonDeserializer<Long>() {
+                @Override
+                public Long deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    Log.e("mylog", "deserialize=>Long");
+                    try {
+                        return json.getAsLong();
+                    } catch (NumberFormatException e) {
+//            throw new JsonSyntaxException(e);
+                    }
+                    return null;
+                }
+            });
+            builder.registerTypeAdapter(Long.TYPE, new JsonDeserializer<Long>() {
+                @Override
+                public Long deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    Log.e("mylog", "deserialize=>long");
+                    try {
+                        return json.getAsLong();
+                    } catch (NumberFormatException e) {
+//            throw new JsonSyntaxException(e);
+                    }
+                    return 0L;
+                }
+            });
+
+            Gson gson = builder.create();
+
+            JSONObject json = new JSONObject();
             try {
-                Field field =A.class.getDeclaredField("b");
-                LogUtils.e("mylog", "field 1" + field.getType().getName());
-                if(field.getGenericType() instanceof ParameterizedType){
-                    ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                    //得到泛型里的class类型对象
-                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
-                    LogUtils.e("mylog", "field 2" + genericClazz.getName());
-                }
-
-
-                if(B.class.getGenericSuperclass() instanceof ParameterizedType){
-                    ParameterizedType pt = (ParameterizedType) B.class.getGenericSuperclass();
-                    //得到泛型里的class类型对象
-                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
-                    LogUtils.e("mylog", "field 3" + genericClazz.getName());
-                }
-
-//                LogUtils.e("mylog", "responseClass 1" + A.a.getClass().getName());
-//                LogUtils.e("mylog", "responseClass 2" + A.a.getClass().getComponentType().getName());
-            } catch (NoSuchFieldException e) {
+                json.put("abc", "");
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            Bean1 b1 = gson.fromJson(json.toString(), Bean1.class);
+            Bean2 b2 = gson.fromJson(json.toString(), Bean2.class);
+
+            Log.e("mylog", "b1=>" + b1);
+            Log.e("mylog", "b2=>" + b2);
+//            try {
+//                Field field =A.class.getDeclaredField("b");
+//                LogUtils.e("mylog", "field 1" + field.getType().getName());
+//                if(field.getGenericType() instanceof ParameterizedType){
+//                    ParameterizedType pt = (ParameterizedType) field.getGenericType();
+//                    //得到泛型里的class类型对象
+//                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
+//                    LogUtils.e("mylog", "field 2" + genericClazz.getName());
+//                }
+//
+//
+//                if(B.class.getGenericSuperclass() instanceof ParameterizedType){
+//                    ParameterizedType pt = (ParameterizedType) B.class.getGenericSuperclass();
+//                    //得到泛型里的class类型对象
+//                    Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
+//                    LogUtils.e("mylog", "field 3" + genericClazz.getName());
+//                }
+//
+////                LogUtils.e("mylog", "responseClass 1" + A.a.getClass().getName());
+////                LogUtils.e("mylog", "responseClass 2" + A.a.getClass().getComponentType().getName());
+//            } catch (NoSuchFieldException e) {
+//                e.printStackTrace();
+//            }
             return;
         }
 //        OkHttpClient client = new OkHttpClient();
